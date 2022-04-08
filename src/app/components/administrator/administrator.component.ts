@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import {CustomValidators} from "../../utils/CustomValidators";
+import { CustomValidators } from "../../utils/CustomValidators";
 declare const google: any;
 
 @Component({
@@ -23,6 +23,7 @@ export class AdministratorComponent implements OnInit {
   formPolygons: FormGroup;
   displayedColumns: string[]
   paths: any;
+  listPolygons: any[];
 
   constructor() {
     this.formUsers = new FormGroup({
@@ -36,105 +37,24 @@ export class AdministratorComponent implements OnInit {
     );
 
     this.formPolygons = new FormGroup({});
-
+    this.displayedColumns = ['id', 'user', 'actions'];
     this.hide = true;
     this.lat = 0;
     this.lng = 0;
-    this.selectedShape = []
+    this.selectedShape = [];
+    this.selectedArea = 0;
+    this.hideConfirm = true;
+    this.listPolygons = JSON.parse(<string>sessionStorage.getItem('routes'));
     this.listUsers = [
       {id: 1, user: 'da1@da.co'},
       {id: 2, user: 'da2@da.co'}
     ];
-    this.displayedColumns = ['id', 'user', 'actions'];
-    this.selectedArea = 0;
-    this.hideConfirm = true;
   }
 
   ngOnInit(): void {
     this.setCurrentPosition();
-    this.initMap();
   }
 
-  createUser(): void {
-  }
-
-  onMapReady(map: any) {
-    this.map = map;
-    this.initDrawingManager();
-  }
-
-  initDrawingManager = () => {
-    const options = {
-      drawingControl: true,
-      drawingControlOptions: {
-        drawingModes: ['polygon'],
-      },
-      polygonOptions: {
-        draggable: true,
-        editable: true,
-      },
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,
-    };
-    this.drawingManager = new google.maps.drawing.DrawingManager(options);
-    this.drawingManager.setMap(this.map);
-    google.maps.event.addListener(
-      this.drawingManager,
-      'overlaycomplete',
-      (event: any) => {
-        if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-          const paths = event.overlay.getPaths();
-          for (let p = 0; p < paths.getLength(); p++) {
-            google.maps.event.addListener(
-              paths.getAt(p),
-              'set_at',
-              () => {
-                event.fillColor = 'red';
-                if (!event.overlay.drag) {
-                  this.selectedArea = google.maps.geometry.spherical.computeArea(
-                    event.overlay.getPath(),
-                    event.fillColor = 'red'
-                  );
-                }
-              }
-            );
-            google.maps.event.addListener(
-              paths.getAt(p),
-              'insert_at',
-              () => {
-                event.fillColor = 'red';
-                this.selectedArea = google.maps.geometry.spherical.computeArea(
-                  event.overlay.getPath(),
-                  event.fillColor = 'red'
-                );
-              }
-            );
-            google.maps.event.addListener(
-              paths.getAt(p),
-              'remove_at',
-              () => {
-                event.fillColor = 'red';
-                this.selectedArea = google.maps.geometry.spherical.computeArea(
-                  event.overlay.getPath(),
-                  event.fillColor = 'red'
-                );
-              }
-            );
-          }
-          let polygon: any;
-          polygon = event.overlay;
-          polygon.type = event.type;
-          polygon.se
-          polygon.positions = this.getPointList(event.overlay.getPath());
-          polygon.id = Math.floor(Math.random() * (1000 - 10));
-          this.selectedShape.push(polygon);
-          this.formPolygons.addControl('name' + polygon.id, new FormControl('', [Validators.required]));
-          this.formPolygons.addControl('description' + polygon.id, new FormControl('', [Validators.required]));
-          this.formPolygons.addControl('positions' + polygon.id, new FormControl(polygon.positions, [Validators.required]));
-        }
-
-      }
-    );
-  }
   private setCurrentPosition() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -142,6 +62,80 @@ export class AdministratorComponent implements OnInit {
         this.lng = position.coords.longitude;
       });
     }
+  }
+
+  onMapReady(map: any) {
+    this.map = map;
+    this.listPolygons.forEach((plg, index) => {
+      this.uploadPolygons(this.listPolygons[index]);
+    });
+    this.initDrawingManager();
+  }
+
+  initDrawingManager() {
+    let color = this.rgbColor();
+    const options = {
+      drawingControl: true,
+      drawingControlOptions: {
+        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
+      },
+      polygonOptions: {
+        draggable: true,
+        editable: true,
+        strokeColor: color,
+        fillColor: color,
+        strokeWeight: 3,
+      },
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+    };
+    this.drawingManager = new google.maps.drawing.DrawingManager(options);
+    this.drawingManager.setMap(this.map);
+    google.maps.event.addListener(this.drawingManager, 'overlaycomplete', (event: any) => {
+        if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+          const paths = event.overlay.getPaths();
+          for (let p = 0; p < paths.getLength(); p++) {
+            google.maps.event.addListener(paths.getAt(p), 'set_at', () => {
+              if (!event.overlay.drag) {
+                this.selectedArea = google.maps.geometry.spherical.computeArea(
+                  event.overlay.getPath()
+                );
+              }
+            });
+            google.maps.event.addListener(paths.getAt(p), 'insert_at', () => {
+              this.selectedArea = google.maps.geometry.spherical.computeArea(
+                event.overlay.getPath()
+              );
+            });
+            google.maps.event.addListener(paths.getAt(p), 'remove_at', () => {
+              this.selectedArea = google.maps.geometry.spherical.computeArea(
+                event.overlay.getPath()
+              );
+            });
+          }
+
+          this.newPolygon(event);
+          if (event.type !== google.maps.drawing.OverlayType.MARKER) {
+            this.drawingManager.setDrawingMode(null);
+            this.drawingManager.setOptions({
+              drawingControl: false,
+            });
+          }
+        }
+      }
+    );
+  }
+
+  newPolygon(event: any) {
+    let polygon: any;
+    polygon = event.overlay;
+    polygon.type = event.type;
+    polygon.id = Math.floor(Math.random() * (1000 - 10));
+    polygon.positions = this.getPointList(event.overlay.getPath());
+
+    this.selectedShape.push(polygon);
+    this.formPolygons.addControl('name' + polygon.id, new FormControl('', [Validators.required]));
+    this.formPolygons.addControl('description' + polygon.id, new FormControl('', [Validators.required]));
+    this.formPolygons.addControl('positions' + polygon.id, new FormControl(polygon.positions, [Validators.required]));
   }
 
   deletePolygon(id: number) {
@@ -173,10 +167,42 @@ export class AdministratorComponent implements OnInit {
     return pointList;
   }
 
+  uploadPolygons(obj: any) {
+    //@ts-ignore
+    let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
+      return { lat: item.latitude, lng: item.longitude }
+    });
+
+    const fill_color = this.rgbColor();
+    let polygon = new google.maps.Polygon({
+      path: positions,
+      map: this.map,
+      strokeColor: fill_color,
+      fillColor: fill_color,
+      strokeWeight: 3,
+      id: obj.id,
+      positions: obj.positions
+    });
+
+    let map = this.map;
+    let popup = new google.maps.InfoWindow();
+    polygon.addListener('click', function(e: any) {
+      popup.setContent('Ruta: ' + obj.name);
+      popup.setPosition(e.latLng);
+      popup.open(map);
+    });
+
+    this.selectedShape.push(polygon);
+    this.formPolygons.addControl('name' + obj.id, new FormControl(obj.name, [Validators.required]));
+    this.formPolygons.addControl('description' + obj.id, new FormControl(obj.description, [Validators.required]));
+    this.formPolygons.addControl('positions' + obj.id, new FormControl(positions, [Validators.required]));
+  }
+
   savePolygon() {
     let listPolygons: {}[] = [];
     this.selectedShape.forEach(item => {
       let polygon = {
+        id: item.id,
         name: this.formPolygons.controls['name' + item.id].value,
         description: this.formPolygons.controls['description' + item.id].value,
         positions: this.formPolygons.controls['positions' + item.id].value.map((item: { lat: any; lng: any; }) => {
@@ -185,32 +211,16 @@ export class AdministratorComponent implements OnInit {
       };
       listPolygons.push(polygon);
     });
-    console.log(listPolygons);
+    sessionStorage.setItem('routes', JSON.stringify(listPolygons));
   }
 
-  initMap() {
-    let positionsByRute = [{}];
-    this.map = new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 4.683187, lng: -74.047565 },
-      zoom: 13
-    });
+  createUser() {}
 
-    var fill_color = "rgb(155, 102, 102)";
+  rgbColor(): string {
+    return "rgb(" + this.getNumber(255) +"," + this.getNumber(255) + "," + this.getNumber(255) +")";
+  }
 
-    var poligono = new google.maps.Polygon({
-      path: positionsByRute,
-      map: this.map,
-      strokeColor: fill_color,
-      fillColor: fill_color,
-      strokeWeight: 3,
-    });
-/*
-    var popup = new google.maps.InfoWindow();
-    poligono.addListener('click', function(e) {
-      popup.setContent('Cobertura para poligono XXX');
-      popup.setPosition(e.latLng);
-      popup.open(this.map);
-    });
-*/
+  getNumber(number: number) {
+    return (Math.random() * number).toFixed(0);
   }
 }

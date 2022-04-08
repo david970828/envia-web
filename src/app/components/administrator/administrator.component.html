@@ -82,9 +82,8 @@
     <mat-tab label="{{'LABELS.ROUTES_MANAGEMENT' | translate}}">
       <div class="content-polygon-container">
         <div class="first-panel">
-          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)">
-            <agm-polygon [paths]="paths"></agm-polygon>
-          </agm-map>
+          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
+          <button mat-raised-button color="warn" (click)="initDrawingManager()">{{'LABELS.NEW_ROUTE' | translate}}</button>
         </div>
         <div class="second-panel">
           <form novalidate [formGroup]="formPolygons">

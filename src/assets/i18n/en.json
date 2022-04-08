@@ -39,7 +39,8 @@
     "ROUTE_NAME": "Route name",
     "DESCRIPTION": "Description",
     "SUCCESS_GUIDE_TITLE": "Guide Creation",
-    "SUCCESS_GUIDE": "Your guide has been generated"
+    "SUCCESS_GUIDE": "Your guide has been generated",
+    "NEW_ROUTE": "New route"
   },
   "BUTTONS": {
     "LOGIN": "Login",
