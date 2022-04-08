@@ -1,0 +1,116 @@
+<div>
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab label="{{'LABELS.USERS_MANAGEMENT' | translate}}">
+      <form novalidate [formGroup]="formUsers">
+        <h2>{{'LABELS.CREATE_UPDATE_USER' | translate}}</h2>
+        <div class="content-container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.USER' | translate}} *</mat-label>
+            <input type="email" formControlName="user" matInput placeholder="{{'LABELS.USER_PLACEHOLDER' | translate}}">
+            <mat-error *ngIf="formUsers.controls.user.hasError('email')">
+              {{'ERRORS.USER_FORMAT' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formUsers.controls.user.hasError('required')">
+              {{'ERRORS.USER_REQUIRED' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.PASSWORD' | translate}} *</mat-label>
+            <input type="password" formControlName="password"  matInput [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="formUsers.controls.password.hasError('required')">
+              {{'ERRORS.PASSWORD_REQUIRED' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formUsers.controls.password.hasError('minlength')">
+              {{'ERRORS.PASSWORD_PATTERN' | translate}}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.CONFIRM_PASSWORD' | translate}} *</mat-label>
+            <input formControlName="confirmPassword" type="password"  matInput [type]="hideConfirm ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirm">
+              <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="formUsers.controls.confirmPassword.hasError('required')">
+              {{'ERRORS.PASSWORD_REQUIRED' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formUsers.controls.confirmPassword.hasError('minlength')">
+              {{'ERRORS.PASSWORD_PATTERN' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formUsers.controls.confirmPassword.hasError('matching')">
+              {{'ERRORS.PASSWORD_COINCIDE' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.ROLE' | translate}}</mat-label>
+            <mat-select formControlName="role">
+              <mat-option value="ADMIN">{{'LABELS.ADMINISTRATOR' | translate}}</mat-option>
+              <mat-option value="POINT">{{'LABELS.POINT' | translate}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button color="warn" (click)="createUser()" [disabled]="formUsers.invalid">{{'BUTTONS.NEW_USER' | translate}}</button>
+        </div>
+      </form>
+
+      <table mat-table [dataSource]="listUsers" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let element; let i = index"> 1</td>
+        </ng-container>
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.USER' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{element.user}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.ACTIONS' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon class="icon-color">edit</mat-icon>
+            <mat-icon class="icon-color">delete</mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-tab>
+    <mat-tab label="{{'LABELS.ROUTES_MANAGEMENT' | translate}}">
+      <div class="content-polygon-container">
+        <div class="first-panel">
+          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)">
+            <agm-polygon [paths]="paths"></agm-polygon>
+          </agm-map>
+        </div>
+        <div class="second-panel">
+          <form novalidate [formGroup]="formPolygons">
+            <div *ngFor="let shape of selectedShape;" style="display:contents">
+              <mat-form-field appearance="fill" floatLabel="always">
+                <mat-label>{{'LABELS.ROUTE_NAME' | translate}} *</mat-label>
+                <input type="text" formControlName="{{'name' + shape.id}}" matInput>
+                <mat-error>
+                  {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" floatLabel="always">
+                <mat-label>{{'LABELS.DESCRIPTION' | translate}} *</mat-label>
+                <input type="text" formControlName="{{'description' + shape.id}}" matInput>
+                <mat-error>
+                  {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+                </mat-error>
+              </mat-form-field>
+              <button mat-raised-button color="warn" (click)="deletePolygon(shape.id)">{{'BUTTONS.DELETE' | translate}}</button>
+            </div>
+          </form>
+          <button mat-raised-button color="warn" *ngIf="selectedShape.length > 0" [disabled]="formPolygons.invalid" (click)="savePolygon()">
+            {{'BUTTONS.SAVE' | translate}}
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

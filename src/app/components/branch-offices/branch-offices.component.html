@@ -1,0 +1,211 @@
+<div>
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab label="{{'LABELS.GUIDES_MANAGEMENT' | translate}}">
+      <form novalidate [formGroup]="formGuide" #formDirective="ngForm">
+        <h2>{{'LABELS.SENDER_DATA' | translate}}</h2>
+        <div class="content-container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.REQUEST_DATE' | translate}} *</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dateSentSender">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.NAMES' | translate}} *</mat-label>
+            <input type="text" formControlName="nameSender" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.LASTNAMES' | translate}} *</mat-label>
+            <input type="text" formControlName="lastNameSender" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
+            <input type="text" formControlName="documentSender" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.PHONE' | translate}} *</mat-label>
+            <input type="text" formControlName="phoneSender" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.DEPARTMENT' | translate}} *</mat-label>
+            <mat-select formControlName="departmentSender">
+              <mat-option *ngFor="let department of departmentsList" value="{{department.departamento}}">{{department.departamento}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.CITY' | translate}} *</mat-label>
+            <mat-select formControlName="citySender">
+              <mat-option *ngFor="let city of cityListSender" value="{{city}}">{{city}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.POSTAL_CODE' | translate}} *</mat-label>
+            <input type="text" formControlName="postalCodeSender" matInput maxlength="8">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <h2>{{'LABELS.ADDRESSEE_DATA' | translate}}</h2>
+        <div class="content-container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.NAMES' | translate}} *</mat-label>
+            <input type="text" formControlName="nameAddressee" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.LASTNAMES' | translate}} *</mat-label>
+            <input type="text" formControlName="lastNameAddressee" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
+            <input type="text" formControlName="documentAddressee" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.PHONE' | translate}} *</mat-label>
+            <input type="text" formControlName="phoneAddressee"  matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.DEPARTMENT' | translate}} *</mat-label>
+            <mat-select formControlName="departmentAddressee">
+              <mat-option *ngFor="let department of departmentsList" value="{{department.departamento}}">{{department.departamento}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.CITY' | translate}} *</mat-label>
+            <mat-select formControlName="cityAddressee">
+              <mat-option *ngFor="let city of cityListAddressee" value="{{city}}">{{city}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.ADDRESS' | translate}} *</mat-label>
+            <input type="text" formControlName="addressAddressee" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.POSTAL_CODE' | translate}} *</mat-label>
+            <input type="text" formControlName="postalCodeAddressee" matInput maxlength="8">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <h2>{{'LABELS.GUIDE_DATA' | translate}}</h2>
+        <div class="content-container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.CONTENT' | translate}} *</mat-label>
+            <input type="text" formControlName="contentGuide" matInput maxlength="50">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.WEIGHT' | translate}} *</mat-label>
+            <input type="number" formControlName="weightGuide" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.UNIT' | translate}} * </mat-label>
+            <mat-select formControlName="unitGuide">
+              <mat-option value="1">1</mat-option>
+              <mat-option value="2">2</mat-option>
+              <mat-option value="2">3</mat-option>
+              <mat-option value="2">4</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.VOLUME' | translate}} *</mat-label>
+            <input type="number" formControlName="volumeGuide" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>{{'LABELS.DECLARED_VALUE' | translate}} *</mat-label>
+            <input type="number" formControlName="declaredValueGuide" matInput class="amount-input" placeholder="0">
+            <span matPrefix>$&nbsp;</span>
+            <span matSuffix>.00</span>
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>{{'LABELS.SERVICE_VALUE' | translate}} *</mat-label>
+            <input type="number" formControlName="serviceValueGuide" matInput class="amount-input" placeholder="0">
+            <span matPrefix>$&nbsp;</span>
+            <span matSuffix>.00</span>
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>{{'LABELS.OTHER_COST' | translate}} *</mat-label>
+            <input type="number" formControlName="othersValueGuide" matInput class="amount-input" placeholder="0">
+            <span matPrefix>$&nbsp;</span>
+            <span matSuffix>.00</span>
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.NOTES' | translate}}</mat-label>
+            <input type="text" formControlName="notesGuide" matInput maxlength="100">
+          </mat-form-field>
+        </div>
+        <div class="content-footer">
+          <button mat-raised-button color="warn" (click)="newGuide()" [disabled]="formGuide.invalid">{{'BUTTONS.NEW_GUIDE' | translate}}</button>
+        </div>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</div>

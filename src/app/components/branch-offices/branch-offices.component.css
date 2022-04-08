@@ -1,0 +1,8 @@
+.content-container{display:grid;justify-content:center;padding:1rem;grid-template-columns:repeat(auto-fill,23em);justify-items:center}
+.content-footer{text-align:center;margin-bottom:2rem}
+h2{margin-left:7rem;color:#d4001b}
+h2:first-child{margin-top:1rem}
+.example-container .mat-form-field + .mat-form-field{margin-left:8px}
+.amount-input{text-align:right}
+input.amount-input::-webkit-outer-spin-button,input.amount-input::-webkit-inner-spin-button{display:none}
+input.amount-input{-moz-appearance:textfield}
