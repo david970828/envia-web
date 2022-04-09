@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
 import { CustomValidators } from "../../utils/CustomValidators";
+import { ToastrService } from "ngx-toastr";
+import { TranslateService } from "@ngx-translate/core";
 declare const google: any;
 
 @Component({
@@ -10,22 +12,25 @@ declare const google: any;
 })
 export class AdministratorComponent implements OnInit {
 
+  map: any;
   lat: number;
   lng: number;
   hide: boolean;
-  map: any;
-  listUsers: any[];
+  isEdit: boolean;
+  listPolygons: any[];
   selectedShape: any[];
   drawingManager: any;
   selectedArea: number;
   hideConfirm: boolean;
   formUsers: FormGroup;
   formPolygons: FormGroup;
-  displayedColumns: string[]
-  paths: any;
-  listPolygons: any[];
+  listUsers: any[];
+  displayedColumns: string[];
 
-  constructor() {
+  @ViewChild(FormGroupDirective)
+  formDirective: FormGroupDirective | undefined;
+
+  constructor(private toastService: ToastrService, private translateService: TranslateService) {
     this.formUsers = new FormGroup({
       user: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('',[Validators.minLength(5), Validators.required]),
@@ -36,23 +41,22 @@ export class AdministratorComponent implements OnInit {
       }
     );
 
-    this.formPolygons = new FormGroup({});
-    this.displayedColumns = ['id', 'user', 'actions'];
-    this.hide = true;
     this.lat = 0;
     this.lng = 0;
-    this.selectedShape = [];
+    this.hide = true;
+    this.isEdit = false;
+    this.listUsers = [];
     this.selectedArea = 0;
     this.hideConfirm = true;
+    this.selectedShape = [];
+    this.formPolygons = new FormGroup({});
+    this.displayedColumns = ['id', 'user', 'actions'];
     this.listPolygons = JSON.parse(<string>sessionStorage.getItem('routes'));
-    this.listUsers = [
-      {id: 1, user: 'da1@da.co'},
-      {id: 2, user: 'da2@da.co'}
-    ];
   }
 
   ngOnInit(): void {
     this.setCurrentPosition();
+    this.listUser();
   }
 
   private setCurrentPosition() {
@@ -69,7 +73,6 @@ export class AdministratorComponent implements OnInit {
     this.listPolygons.forEach((plg, index) => {
       this.uploadPolygons(this.listPolygons[index]);
     });
-    this.initDrawingManager();
   }
 
   initDrawingManager() {
@@ -113,7 +116,7 @@ export class AdministratorComponent implements OnInit {
             });
           }
 
-          this.newPolygon(event);
+          this.newPolygon(event, color);
           if (event.type !== google.maps.drawing.OverlayType.MARKER) {
             this.drawingManager.setDrawingMode(null);
             this.drawingManager.setOptions({
@@ -125,9 +128,10 @@ export class AdministratorComponent implements OnInit {
     );
   }
 
-  newPolygon(event: any) {
+  newPolygon(event: any, color: string) {
     let polygon: any;
     polygon = event.overlay;
+    polygon.color = color;
     polygon.type = event.type;
     polygon.id = Math.floor(Math.random() * (1000 - 10));
     polygon.positions = this.getPointList(event.overlay.getPath());
@@ -181,7 +185,8 @@ export class AdministratorComponent implements OnInit {
       fillColor: fill_color,
       strokeWeight: 3,
       id: obj.id,
-      positions: obj.positions
+      positions: obj.positions,
+      color: fill_color
     });
 
     let map = this.map;
@@ -212,9 +217,45 @@ export class AdministratorComponent implements OnInit {
       listPolygons.push(polygon);
     });
     sessionStorage.setItem('routes', JSON.stringify(listPolygons));
+    this.toastService.success(this.translateService.instant('LABELS.SUCCESS_ROUTES'), this.translateService.instant('LABELS.NEW_ROUTE'));
+    //this.toastService.error(this.translateService.instant('ERRORS.ROUTES'), this.translateService.instant('ERRORS.TITLE'));
   }
 
-  createUser() {}
+  createUser() {
+    if (this.isEdit) {
+      this.isEdit = false;
+    } else {
+      this.listUsers.push({
+        user: this.formUsers.controls.user.value,
+        password: btoa(this.formUsers.controls.password.value),
+        role: this.formUsers.controls.role.value
+      });
+    }
+    sessionStorage.setItem('users', JSON.stringify(this.listUsers));
+    this.toastService.success(this.translateService.instant('LABELS.SUCCESS_USER'), this.translateService.instant('LABELS.SUCCESS_USER_TITLE'));
+    //@ts-ignore
+    this.formDirective.resetForm();
+    this.formUsers.reset();
+    this.listUser();
+    //this.toastService.error(this.translateService.instant('ERRORS.USER'), this.translateService.instant('ERRORS.TITLE'));
+  }
+
+  editUser(user: any) {
+    this.formUsers.controls.user.setValue(user.user);
+    this.formUsers.controls.password.setValue(atob(user.password));
+    this.formUsers.controls.confirmPassword.setValue(atob(user.password));
+    this.formUsers.controls.role.setValue(user.role);
+    this.isEdit = true;
+  }
+
+  deleteUser(id: number) {
+    this.listUsers = this.listUsers.filter((usr, index) => { return id !== index});
+  }
+
+  listUser(): void {
+    const usersTemp = sessionStorage.getItem('users');
+    this.listUsers = usersTemp === null ? [] : JSON.parse(<any>usersTemp);
+  }
 
   rgbColor(): string {
     return "rgb(" + this.getNumber(255) +"," + this.getNumber(255) + "," + this.getNumber(255) +")";

@@ -40,13 +40,17 @@
     "DESCRIPTION": "Description",
     "SUCCESS_GUIDE_TITLE": "Guide Creation",
     "SUCCESS_GUIDE": "Your guide has been generated",
-    "NEW_ROUTE": "New route"
+    "NEW_ROUTE": "New Route",
+    "SUCCESS_ROUTES": "Your routes have been successfully created",
+    "SUCCESS_USER_TITLE": "Create users",
+    "SUCCESS_USER": "Your user has been created / updated successfully"
   },
   "BUTTONS": {
     "LOGIN": "Login",
-    "LOGOUT": "Close",
+    "LOGOUT": "Close Session",
     "TRACK": "Track",
-    "NEW_USER": "Create User",
+    "NEW_USER": "Create user",
+    "EDIT_USER": "Edit user",
     "NEW_GUIDE": "Generate Guide",
     "DELETE": "Delete",
     "SAVE": "Save"
@@ -60,6 +64,8 @@
     "OBLIGATORY_FIELD": "Field is required",
     "LOAD_DATA": "Data not loaded, please try again",
     "TITLE": "Sorry",
-    "GUIDE_GENERATE": "Your guide could not be generated, please try again"
+    "GUIDE_GENERATE": "Your guide could not be generated, please try again",
+    "ROUTES": "Your routes could not be created, please try again",
+    "USER": "Your user did not put generated"
   }
 }

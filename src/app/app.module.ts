@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AgmCoreModule } from "@agm/core";
+import { ToastrModule } from "ngx-toastr";
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthService } from "./services/auth-service";
@@ -7,9 +8,14 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { AppRoutingModule } from './app-routing.module';
+import { MatListModule } from "@angular/material/list";
+import { UsersService } from "./services/users-service";
 import { MatInputModule } from "@angular/material/input";
+import { MatTableModule } from "@angular/material/table";
 import { BrowserModule } from '@angular/platform-browser';
 import { GuidesService } from "./services/guides-service";
+import { environment } from "../environments/environment";
+import { RoutesService } from "./services/routes-service";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { CustomValidators } from "./utils/CustomValidators";
@@ -24,10 +30,6 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministratorComponent } from './components/administrator/administrator.component';
 import { BranchOfficesComponent } from './components/branch-offices/branch-offices.component';
-import {MatTableModule} from "@angular/material/table";
-import {ToastrModule} from "ngx-toastr";
-import {MatListModule} from "@angular/material/list";
-import {MatCardModule} from "@angular/material/card";
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -43,20 +45,20 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatInputModule,
     MatTabsModule,
     MatMenuModule,
-    MatTableModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatIconModule,
     MatListModule,
+    MatInputModule,
+    MatTableModule,
+    MatButtonModule,
     MatSelectModule,
-    ReactiveFormsModule,
     HttpClientModule,
+    AppRoutingModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    MatNativeDateModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -65,7 +67,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
       },
     }),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDybihmidjkWncTMrLuqnInXXkNOiDDx14',
+      apiKey: environment.apiKeyMaps,
       libraries: ['places', 'drawing', 'geometry']
     }),
     ToastrModule.forRoot({
@@ -79,10 +81,12 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     }),
   ],
   providers: [
-    CustomValidators,
     AuthService,
+    UsersService,
+    RoutesService,
+    GuidesService,
     ColombiaService,
-    GuidesService
+    CustomValidators
   ],
   bootstrap: [AppComponent]
 })

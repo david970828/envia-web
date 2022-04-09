@@ -1,17 +1,16 @@
 .content-container{display:flex;justify-content:space-evenly;padding:1rem;flex-wrap:wrap}
 .content-polygon-container{display:flex;padding:1rem;}
 .content-polygon-container div.first-panel{display: block;width:60%;text-align: right}
-.content-polygon-container div.second-panel{display:block;width:40%;text-align: right}
-.content-polygon-container div.second-panel form{display:flex;justify-content:space-between;padding-left:1rem;flex-wrap: wrap;}
-.content-polygon-container div button{margin-top:0.5rem;margin-bottom:0.5rem;}
-agm-map{height: 500px !important;width:100%;}
+.content-polygon-container div.second-panel{width: 40%;text-align: end;}
+.content-polygon-container div.second-panel form div{justify-content: space-evenly;display:flex;align-items:baseline;}
+agm-map{height: 600px !important;width:100%;}
 h2{margin-left:7rem;color:#d4001b}
 h2:first-child{margin-top:1rem}
 button{height:2.4rem}
 table{width:90%;margin:auto;text-align:center;}
 .icon-color{color:#d4001b;cursor:pointer}
 ::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
-@media(max-width:900px) {
+@media(max-width:1330px) {
   table{width:98%;}
   .content-polygon-container{display:block;}
   .content-polygon-container :is(div.first-panel, div.second-panel){width:100%}

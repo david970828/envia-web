@@ -40,13 +40,17 @@
     "DESCRIPTION": "Descripción",
     "SUCCESS_GUIDE_TITLE": "Creación de guías",
     "SUCCESS_GUIDE": "Tu guía ha sido generada",
-    "NEW_ROUTE": "Nueva ruta"
+    "NEW_ROUTE": "Nueva ruta",
+    "SUCCESS_ROUTES": "Tus rutas han sido creadas de manera exitosa",
+    "SUCCESS_USER_TITLE": "Creación de usuarios",
+    "SUCCESS_USER": "Tu usuario ha sido creado / actualizado exitosamente"
   },
   "BUTTONS": {
     "LOGIN": "Ingresar",
     "LOGOUT": "Cerrar Sesión",
     "TRACK": "Rastrea",
     "NEW_USER": "Crear usuario",
+    "EDIT_USER": "Editar usuario",
     "NEW_GUIDE": "Generar guía",
     "DELETE": "Eliminar",
     "SAVE": "Guardar"
@@ -60,6 +64,8 @@
     "OBLIGATORY_FIELD": "El campo es obligatorio",
     "LOAD_DATA": "No se cargaron los datos, intenta de nuevo",
     "TITLE": "Lo sentimos",
-    "GUIDE_GENERATE": "Tu guía no se pudo generar, intenta de nuevo"
+    "GUIDE_GENERATE": "Tu guía no se pudo generar, intenta de nuevo",
+    "ROUTES": "Tus rutas no se puedieron crear, intenta de nuevo",
+    "USER": "Tu usuario no puso generado"
   }
 }

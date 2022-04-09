@@ -1,7 +1,7 @@
 <div>
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="{{'LABELS.USERS_MANAGEMENT' | translate}}">
-      <form novalidate [formGroup]="formUsers">
+      <form novalidate [formGroup]="formUsers" #formDirective="ngForm">
         <h2>{{'LABELS.CREATE_UPDATE_USER' | translate}}</h2>
         <div class="content-container">
           <mat-form-field appearance="fill">
@@ -52,7 +52,12 @@
               <mat-option value="POINT">{{'LABELS.POINT' | translate}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-raised-button color="warn" (click)="createUser()" [disabled]="formUsers.invalid">{{'BUTTONS.NEW_USER' | translate}}</button>
+          <button mat-raised-button color="warn" *ngIf="!isEdit" (click)="createUser()" [disabled]="formUsers.invalid">
+            {{'BUTTONS.NEW_USER' | translate}}
+          </button>
+          <button mat-raised-button color="warn" *ngIf="isEdit" (click)="createUser()" [disabled]="formUsers.invalid">
+            {{'BUTTONS.EDIT_USER' | translate}}
+          </button>
         </div>
       </form>
 
@@ -69,9 +74,9 @@
 
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>{{'LABELS.ACTIONS' | translate}}</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-icon class="icon-color">edit</mat-icon>
-            <mat-icon class="icon-color">delete</mat-icon>
+          <td mat-cell *matCellDef="let element let i = index">
+            <mat-icon class="icon-color" (click)="editUser(element)">edit</mat-icon>
+            <mat-icon class="icon-color" (click)="deleteUser(i)">delete</mat-icon>
           </td>
         </ng-container>
 
@@ -83,11 +88,12 @@
       <div class="content-polygon-container">
         <div class="first-panel">
           <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
-          <button mat-raised-button color="warn" (click)="initDrawingManager()">{{'LABELS.NEW_ROUTE' | translate}}</button>
+          <button mat-raised-button color="warn" style="margin-top:1rem" (click)="initDrawingManager()">{{'LABELS.NEW_ROUTE' | translate}}</button>
         </div>
         <div class="second-panel">
           <form novalidate [formGroup]="formPolygons">
-            <div *ngFor="let shape of selectedShape;" style="display:contents">
+            <div *ngFor="let shape of selectedShape;">
+              <mat-icon [style.color]="shape.color">layers</mat-icon>
               <mat-form-field appearance="fill" floatLabel="always">
                 <mat-label>{{'LABELS.ROUTE_NAME' | translate}} *</mat-label>
                 <input type="text" formControlName="{{'name' + shape.id}}" matInput>
@@ -105,7 +111,7 @@
               <button mat-raised-button color="warn" (click)="deletePolygon(shape.id)">{{'BUTTONS.DELETE' | translate}}</button>
             </div>
           </form>
-          <button mat-raised-button color="warn" *ngIf="selectedShape.length > 0" [disabled]="formPolygons.invalid" (click)="savePolygon()">
+          <button mat-raised-button color="warn" style="margin-right:1.3rem;" *ngIf="selectedShape.length > 0" [disabled]="formPolygons.invalid" (click)="savePolygon()">
             {{'BUTTONS.SAVE' | translate}}
           </button>
         </div>

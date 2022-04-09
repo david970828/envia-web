@@ -2,7 +2,8 @@
 .container-header-img img{width:15rem}
 .container-body{padding:0 3rem;}
 .icon-color{color:#d4001b}
-::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{background: #d4001b}
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{background:#d4001b;cursor:pointer}
+::ng-deep mat-icon{cursor:pointer;}
 @media(max-width:900px) {
   .container-body{padding:0 1rem;}
 }
