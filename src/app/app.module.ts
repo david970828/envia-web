@@ -20,7 +20,9 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { CustomValidators } from "./utils/CustomValidators";
 import { MatNativeDateModule } from "@angular/material/core";
+import { MatStepperModule } from "@angular/material/stepper";
 import { ColombiaService } from "./services/colombia-service";
+import {MatPaginatorModule} from "@angular/material/paginator";
 import { HomeComponent } from './components/home/home.component';
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -53,8 +55,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatTableModule,
     MatButtonModule,
     MatSelectModule,
+    MatStepperModule,
     HttpClientModule,
     AppRoutingModule,
+    MatPaginatorModule,
     MatDatepickerModule,
     ReactiveFormsModule,
     MatNativeDateModule,

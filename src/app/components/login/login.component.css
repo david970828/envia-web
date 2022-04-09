@@ -5,6 +5,13 @@
 .container-footer{display:flex;height:6rem;margin:2rem 1rem;align-items:center;justify-content:center}
 .container-footer-form{display:flex;justify-content:space-evenly;width:25%}
 button{height: 3.3rem;}
+mat-stepper{width:80%;text-align:center;margin:auto;}
+h2{margin-left:7rem;color:#d4001b;text-align:center;}
+::ng-deep .mat-step-header .mat-step-icon-selected{background:#d4001b;}
+::ng-deep .mat-step-header .mat-step-icon-state-done{background:#d4001b;}
+::ng-deep .mat-horizontal-stepper-header{
+  pointer-events: none !important;
+}
 @media(max-width:1300px) {
   .container-header-img{width:40%}
   .container-footer-form{width:50%}

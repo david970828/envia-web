@@ -3,6 +3,8 @@ import { FormControl, FormGroup, FormGroupDirective, Validators } from "@angular
 import { CustomValidators } from "../../utils/CustomValidators";
 import { ToastrService } from "ngx-toastr";
 import { TranslateService } from "@ngx-translate/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 declare const google: any;
 
 @Component({
@@ -17,6 +19,7 @@ export class AdministratorComponent implements OnInit {
   lng: number;
   hide: boolean;
   isEdit: boolean;
+  listUsers: any[];
   listPolygons: any[];
   selectedShape: any[];
   drawingManager: any;
@@ -24,9 +27,9 @@ export class AdministratorComponent implements OnInit {
   hideConfirm: boolean;
   formUsers: FormGroup;
   formPolygons: FormGroup;
-  listUsers: any[];
   displayedColumns: string[];
-
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator | undefined;
   @ViewChild(FormGroupDirective)
   formDirective: FormGroupDirective | undefined;
 
@@ -148,9 +151,6 @@ export class AdministratorComponent implements OnInit {
         if (item.id === id) {
           item.setMap(null);
           this.selectedArea = 0;
-          this.drawingManager.setOptions({
-            drawingControl: true,
-          });
         }
       });
       this.formPolygons.removeControl('name' + id);
@@ -172,7 +172,6 @@ export class AdministratorComponent implements OnInit {
   }
 
   uploadPolygons(obj: any) {
-    //@ts-ignore
     let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
       return { lat: item.latitude, lng: item.longitude }
     });
@@ -258,7 +257,7 @@ export class AdministratorComponent implements OnInit {
   }
 
   rgbColor(): string {
-    return "rgb(" + this.getNumber(255) +"," + this.getNumber(255) + "," + this.getNumber(255) +")";
+    return `rgb(${this.getNumber(255)},${this.getNumber(255)},${this.getNumber(255)})`;
   }
 
   getNumber(number: number) {

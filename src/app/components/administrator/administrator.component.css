@@ -4,14 +4,15 @@
 .content-polygon-container div.second-panel{width: 40%;text-align: end;}
 .content-polygon-container div.second-panel form div{justify-content: space-evenly;display:flex;align-items:baseline;}
 agm-map{height: 600px !important;width:100%;}
+table, mat-paginator{width:90%;margin:auto;text-align:center;}
+::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
+::ng-deep td.mat-cell.cdk-cell{text-align: center;}
 h2{margin-left:7rem;color:#d4001b}
 h2:first-child{margin-top:1rem}
 button{height:2.4rem}
-table{width:90%;margin:auto;text-align:center;}
 .icon-color{color:#d4001b;cursor:pointer}
-::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
 @media(max-width:1330px) {
-  table{width:98%;}
+  table,mat-paginator{width:98%;}
   .content-polygon-container{display:block;}
   .content-polygon-container :is(div.first-panel, div.second-panel){width:100%}
 }

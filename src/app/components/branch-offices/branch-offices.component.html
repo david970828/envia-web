@@ -12,6 +12,14 @@
           </mat-form-field>
 
           <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
+            <input type="text" formControlName="documentSender" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.NAMES' | translate}} *</mat-label>
             <input type="text" formControlName="nameSender" matInput maxlength="50">
             <mat-error>
@@ -22,14 +30,6 @@
           <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.LASTNAMES' | translate}} *</mat-label>
             <input type="text" formControlName="lastNameSender" matInput maxlength="50">
-            <mat-error>
-              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
-            <input type="text" formControlName="documentSender" matInput maxlength="10">
             <mat-error>
               {{'ERRORS.OBLIGATORY_FIELD' | translate}}
             </mat-error>
@@ -69,6 +69,14 @@
         <h2>{{'LABELS.ADDRESSEE_DATA' | translate}}</h2>
         <div class="content-container">
           <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
+            <input type="text" formControlName="documentAddressee" matInput maxlength="10">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.NAMES' | translate}} *</mat-label>
             <input type="text" formControlName="nameAddressee" matInput maxlength="50">
             <mat-error>
@@ -79,14 +87,6 @@
           <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.LASTNAMES' | translate}} *</mat-label>
             <input type="text" formControlName="lastNameAddressee" matInput maxlength="50">
-            <mat-error>
-              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
-            <input type="text" formControlName="documentAddressee" matInput maxlength="10">
             <mat-error>
               {{'ERRORS.OBLIGATORY_FIELD' | translate}}
             </mat-error>
@@ -206,6 +206,48 @@
           <button mat-raised-button color="warn" (click)="newGuide()" [disabled]="formGuide.invalid">{{'BUTTONS.NEW_GUIDE' | translate}}</button>
         </div>
       </form>
+    </mat-tab>
+    <mat-tab label="{{'LABELS.HISTORY_GUIDES' | translate}}">
+      <div class="content-history">
+        <table mat-table [dataSource]="listGuides" matSort>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>No.</th>
+            <td mat-cell *matCellDef="let element; let i = index"> 1</td>
+          </ng-container>
+
+          <ng-container matColumnDef="date_admission">
+            <th mat-header-cell *matHeaderCellDef>{{'LABELS.REQUEST_DATE' | translate}}</th>
+            <td mat-cell *matCellDef="let element">{{element.date_admission}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="origin_city">
+            <th mat-header-cell *matHeaderCellDef>{{'LABELS.ORIGIN_CITY' | translate}}</th>
+            <td mat-cell *matCellDef="let element">{{element.origin_city}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="destination_city">
+            <th mat-header-cell *matHeaderCellDef>{{'LABELS.TARGET_CITY' | translate}}</th>
+            <td mat-cell *matCellDef="let element">{{element.destination_city}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="content_guide">
+            <th mat-header-cell *matHeaderCellDef>{{'LABELS.CONTENT' | translate}}</th>
+            <td mat-cell *matCellDef="let element">{{element.content_guide}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>{{'LABELS.STATUS' | translate}}</th>
+            <td mat-cell *matCellDef="let element">{{'LABELS.STATUS_GUIDE.' + element.status_guide | translate}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons
+                       aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </div>

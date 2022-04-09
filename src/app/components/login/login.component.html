@@ -17,19 +17,30 @@
         </button>
       </mat-form-field>
 
-      <button  mat-raised-button color="warn" [disabled]="formLogin.invalid" (click)="login()">{{'BUTTONS.LOGIN' | translate}}</button>
+      <button  mat-raised-button color="warn" [disabled]="formLogin.invalid" (click)="login()">
+        {{'BUTTONS.LOGIN' | translate}}
+      </button>
     </div>
   </div>
 </form>
 <img src="assets/img/banner.jpg" style="width: 100%">
-
-<div class="container-footer">
-  <h3>{{'LABELS.TRACK_GUIDE' |  translate}}</h3>
-  <div class="container-footer-form">
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>{{'LABELS.NUMBER_GUIDE' |  translate}}</mat-label>
-      <input type="text" matInput placeholder="0012345678900">
-    </mat-form-field>
-    <button mat-raised-button color="warn">{{'BUTTONS.TRACK' | translate}}</button>
+<form novalidate [formGroup]="formTrack">
+  <div class="container-footer">
+    <h3>{{'LABELS.TRACK_GUIDE' |  translate}}</h3>
+    <div class="container-footer-form">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>{{'LABELS.NUMBER_GUIDE' |  translate}}</mat-label>
+        <input type="text" matInput placeholder="0012345678900" formControlName="id">
+      </mat-form-field>
+      <button mat-raised-button color="warn" (click)="trackGuide()" [disabled]="formTrack.invalid">{{'BUTTONS.TRACK' | translate}}</button>
+    </div>
   </div>
-</div>
+<h2 *ngIf="isStatusGuide">{{'LABELS.TRACK_GUIDE_RESULT' | translate}}</h2>
+  <mat-stepper labelPosition="bottom" *ngIf="isStatusGuide">
+    <mat-step label="{{'LABELS.STATUS_GUIDE.0' | translate}}" [editable]="false" [completed]="stepGuide >= 0"></mat-step>
+    <mat-step label="{{'LABELS.STATUS_GUIDE.1' | translate}}" [editable]="false" [completed]="stepGuide >= 1"></mat-step>
+    <mat-step label="{{'LABELS.STATUS_GUIDE.2' | translate}}" [editable]="false" [completed]="stepGuide >= 2"></mat-step>
+    <mat-step label="{{'LABELS.STATUS_GUIDE.3' | translate}}" [editable]="false" [completed]="stepGuide >= 3"></mat-step>
+    <mat-step label="{{'LABELS.STATUS_GUIDE.' + getLabelTracker() | translate}}" [editable]="false" [completed]="stepGuide >= 4"></mat-step>
+  </mat-stepper>
+</form>
