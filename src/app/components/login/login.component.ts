@@ -1,9 +1,11 @@
+import { Router} from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
-import { Router} from "@angular/router";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { GuidesService } from "../../services/guides-service";
-import { ToastrService } from "ngx-toastr";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
+import { GuidesService } from '../../services/guides-service';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 @Component({
   selector: 'app-login',
@@ -21,12 +23,12 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private guidesService: GuidesService,
               private toastService: ToastrService, private translateService: TranslateService) {
     this.hide = true;
-    this.stepGuide = 7;
+    this.stepGuide = 0;
     this.isStatusGuide = false;
 
     this.formLogin = new FormGroup({
         user: new FormControl('', [Validators.required]),
-        password: new FormControl('',[Validators.minLength(5), Validators.required]),
+        password: new FormControl('', [Validators.minLength(6), Validators.required]),
       },
     );
     this.formTrack = new FormGroup({
@@ -37,14 +39,18 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  login(): void {
-    if (this.formLogin.controls.user.value === 'admin') {
-      sessionStorage.setItem('role', 'ADMIN')
+  login() {
+    const auth = getAuth();
+    const obj = this.formLogin.value;
+    signInWithEmailAndPassword(auth, obj.user, btoa(obj.password)).then(async (userCredential) => {
+      const docRef = await doc(getFirestore(), `users/${userCredential.user.uid}`);
+      const roleUser = await getDoc(docRef);
+      // @ts-ignore
+      sessionStorage.setItem('role', roleUser.data().role);
       this.router.navigate(['home']);
-    } else {
-      sessionStorage.setItem('role', 'POINT')
-      this.router.navigate(['home']);
-    }
+    }).catch(() => {
+      this.toastService.error(this.translateService.instant('ERRORS.USER_PASSWORD'), this.translateService.instant('ERRORS.TITLE'));
+    })
   }
 
   trackGuide() {
@@ -52,9 +58,7 @@ export class LoginComponent implements OnInit {
       if (response !== null) {
         this.stepGuide = response.status_guide;
         this.isStatusGuide = true;
-        setTimeout(() => {
-          this.isStatusGuide = false;
-        }, 30000);
+        setTimeout(() => { this.isStatusGuide = false; }, 30000);
       } else {
         this.toastService.error(this.translateService.instant('ERRORS.TRACK_GUIDE'), this.translateService.instant('ERRORS.TITLE'));
       }

@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
-import { CustomValidators } from "../../utils/CustomValidators";
-import { ToastrService } from "ngx-toastr";
-import { TranslateService } from "@ngx-translate/core";
-import { MatPaginator } from "@angular/material/paginator";
+import { CustomValidators } from '../../utils/CustomValidators';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { RoutesService} from '../../services/routes-service';
+import { createUserWithEmailAndPassword, getAuth, deleteUser } from 'firebase/auth';
+import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { MatTableDataSource } from "@angular/material/table";
+
 declare const google: any;
 
 @Component({
@@ -19,7 +23,6 @@ export class AdministratorComponent implements OnInit {
   lng: number;
   hide: boolean;
   isEdit: boolean;
-  listUsers: any[];
   listPolygons: any[];
   selectedShape: any[];
   drawingManager: any;
@@ -28,16 +31,19 @@ export class AdministratorComponent implements OnInit {
   formUsers: FormGroup;
   formPolygons: FormGroup;
   displayedColumns: string[];
+  listUsers: MatTableDataSource<any>;
   @ViewChild(MatPaginator)
   paginator: MatPaginator | undefined;
   @ViewChild(FormGroupDirective)
   formDirective: FormGroupDirective | undefined;
 
-  constructor(private toastService: ToastrService, private translateService: TranslateService) {
+  constructor(private toastService: ToastrService, private translateService: TranslateService,
+              private routesService: RoutesService) {
+
     this.formUsers = new FormGroup({
       user: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('',[Validators.minLength(5), Validators.required]),
-      confirmPassword: new FormControl('', [Validators.minLength(5), Validators.required]),
+      password: new FormControl('',[Validators.minLength(6), Validators.required]),
+      confirmPassword: new FormControl('', [Validators.minLength(6), Validators.required]),
       role: new FormControl('ADMIN', Validators.required),
     }, {
       validators: [CustomValidators.match('password', 'confirmPassword')]
@@ -48,13 +54,13 @@ export class AdministratorComponent implements OnInit {
     this.lng = 0;
     this.hide = true;
     this.isEdit = false;
-    this.listUsers = [];
     this.selectedArea = 0;
     this.hideConfirm = true;
     this.selectedShape = [];
     this.formPolygons = new FormGroup({});
-    this.displayedColumns = ['id', 'user', 'actions'];
-    this.listPolygons = JSON.parse(<string>sessionStorage.getItem('routes'));
+    this.listUsers = new MatTableDataSource<any>();
+    this.displayedColumns = ['id', 'user', 'role', 'actions'];
+    this.listPolygons = [];
   }
 
   ngOnInit(): void {
@@ -73,9 +79,7 @@ export class AdministratorComponent implements OnInit {
 
   onMapReady(map: any) {
     this.map = map;
-    this.listPolygons.forEach((plg, index) => {
-      this.uploadPolygons(this.listPolygons[index]);
-    });
+    //this.listRoutes();
   }
 
   initDrawingManager() {
@@ -224,36 +228,60 @@ export class AdministratorComponent implements OnInit {
     if (this.isEdit) {
       this.isEdit = false;
     } else {
-      this.listUsers.push({
-        user: this.formUsers.controls.user.value,
-        password: btoa(this.formUsers.controls.password.value),
-        role: this.formUsers.controls.role.value
+      const auth = getAuth();
+      let obj = this.formUsers.value;
+      createUserWithEmailAndPassword(auth, obj.user, btoa(obj.password))
+        .then(async (userCredential) => {
+          const docRef = await doc(getFirestore(), `users/${userCredential.user.uid}`);
+          setDoc(docRef, {user: obj.user, role: obj.role, uid: userCredential.user.uid}).then((response) => {
+            //@ts-ignore
+            this.formDirective.resetForm();
+            this.formUsers.reset();
+            this.listUser();
+            this.toastService.success(this.translateService.instant('LABELS.SUCCESS_USER'), this.translateService.instant('LABELS.SUCCESS_USER_TITLE'));
+          }).catch((error) => {
+            this.viewError();
+          });
+        }).catch((error) => {
+        this.viewError();
       });
     }
-    sessionStorage.setItem('users', JSON.stringify(this.listUsers));
-    this.toastService.success(this.translateService.instant('LABELS.SUCCESS_USER'), this.translateService.instant('LABELS.SUCCESS_USER_TITLE'));
+  }
+
+  viewError() {
+    this.toastService.error(this.translateService.instant('ERRORS.USER'), this.translateService.instant('ERRORS.TITLE'));
+  }
+
+  deleteUser(user: any) {
+    deleteUser(user).then((response) => {
+      deleteDoc(doc(getFirestore(), 'users', user.uid));
+      this.toastService.success(this.translateService.instant('LABELS.USER_DELETE'), this.translateService.instant('LABELS.USER_DELETE_TITLE'));
+    }).catch((error) => {
+      console.log(error);
+      this.toastService.error(this.translateService.instant('ERRORS.USER_DELETE'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  async listUser() {
+    const docs = await getDocs(collection(getFirestore(), 'users/'));
+    const users: any[] | undefined = [];
+    docs.forEach(doc => {
+      users.push(doc.data());
+    });
+    this.listUsers =  new MatTableDataSource(users);
     //@ts-ignore
-    this.formDirective.resetForm();
-    this.formUsers.reset();
-    this.listUser();
-    //this.toastService.error(this.translateService.instant('ERRORS.USER'), this.translateService.instant('ERRORS.TITLE'));
+    this.listUsers.paginator = this.paginator;
   }
 
-  editUser(user: any) {
-    this.formUsers.controls.user.setValue(user.user);
-    this.formUsers.controls.password.setValue(atob(user.password));
-    this.formUsers.controls.confirmPassword.setValue(atob(user.password));
-    this.formUsers.controls.role.setValue(user.role);
-    this.isEdit = true;
-  }
-
-  deleteUser(id: number) {
-    this.listUsers = this.listUsers.filter((usr, index) => { return id !== index});
-  }
-
-  listUser(): void {
-    const usersTemp = sessionStorage.getItem('users');
-    this.listUsers = usersTemp === null ? [] : JSON.parse(<any>usersTemp);
+  listRoutes() {
+    this.routesService.listRoutes().subscribe(response => {
+      this.listPolygons = response;
+      this.listPolygons.forEach((plg, index) => {
+        this.uploadPolygons(this.listPolygons[index]);
+      });
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.ROUTES_LIST'), this.translateService.instant('ERRORS.TITLE'));
+    })
   }
 
   rgbColor(): string {

@@ -13,7 +13,7 @@
 
           <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
-            <input type="text" formControlName="documentSender" matInput maxlength="10">
+            <input type="text" formControlName="documentSender" matInput maxlength="10" (blur)="getPerson('origin', $event)">
             <mat-error>
               {{'ERRORS.OBLIGATORY_FIELD' | translate}}
             </mat-error>
@@ -70,7 +70,7 @@
         <div class="content-container">
           <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.IDENTITY_DOCUMENT' | translate}} *</mat-label>
-            <input type="text" formControlName="documentAddressee" matInput maxlength="10">
+            <input type="text" formControlName="documentAddressee" matInput maxlength="10" (blur)="getPerson('addressee', $event)">
             <mat-error>
               {{'ERRORS.OBLIGATORY_FIELD' | translate}}
             </mat-error>

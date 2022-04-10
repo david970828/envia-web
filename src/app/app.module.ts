@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AgmCoreModule } from "@agm/core";
 import { ToastrModule } from "ngx-toastr";
+import { initializeApp } from 'firebase/app';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { AuthService } from "./services/auth-service";
@@ -9,8 +10,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { AppRoutingModule } from './app-routing.module';
 import { MatListModule } from "@angular/material/list";
-import { UsersService } from "./services/users-service";
 import { MatInputModule } from "@angular/material/input";
+import { AngularFireModule } from "@angular/fire/compat";
 import { MatTableModule } from "@angular/material/table";
 import { BrowserModule } from '@angular/platform-browser';
 import { GuidesService } from "./services/guides-service";
@@ -32,6 +33,8 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministratorComponent } from './components/administrator/administrator.component';
 import { BranchOfficesComponent } from './components/branch-offices/branch-offices.component';
+
+initializeApp(environment.firebaseConfig);
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
@@ -58,6 +61,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatStepperModule,
     HttpClientModule,
     AppRoutingModule,
+    AngularFireModule,
     MatPaginatorModule,
     MatDatepickerModule,
     ReactiveFormsModule,
@@ -82,11 +86,10 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
       positionClass: 'toast-top-right',
       timeOut: 10000,
       extendedTimeOut: 5000,
-    }),
+    })
   ],
   providers: [
     AuthService,
-    UsersService,
     RoutesService,
     GuidesService,
     ColombiaService,

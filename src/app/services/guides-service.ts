@@ -20,4 +20,8 @@ export class GuidesService {
     return this.http.get(`${environment.apiGuides}/guides/${id}`).pipe((response: any) => response);
   }
 
+  getPerson(id: string): Observable<any> {
+    return this.http.get(`${environment.apiGuides}/people/${id}`).pipe((response: any) => response);
+  }
+
 }

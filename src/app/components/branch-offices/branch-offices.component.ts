@@ -29,25 +29,25 @@ export class BranchOfficesComponent implements OnInit {
               private toastService: ToastrService, private translateService: TranslateService) {
     this.formGuide = new FormGroup({
       dateSentSender: new FormControl('', Validators.required),
-      nameSender: new FormControl('David', Validators.required),
-      lastNameSender: new FormControl('Pardo', Validators.required),
+      nameSender: new FormControl('', Validators.required),
+      lastNameSender: new FormControl('', Validators.required),
       departmentSender: new FormControl('', Validators.required),
       citySender: new FormControl('', Validators.required),
-      phoneSender: new FormControl('3045214919', Validators.required),
-      documentSender: new FormControl('1032492883', Validators.required),
-      postalCodeSender: new FormControl('12120', Validators.required),
-      nameAddressee: new FormControl('Ricardo', Validators.required),
-      lastNameAddressee: new FormControl('Gonzalez', Validators.required),
-      addressAddressee: new FormControl('Carrera 16K 36 24 S', Validators.required),
-      phoneAddressee: new FormControl('3123156256', Validators.required),
-      documentAddressee: new FormControl('51971515', Validators.required),
-      postalCodeAddressee: new FormControl('12121', Validators.required),
+      phoneSender: new FormControl('', Validators.required),
+      documentSender: new FormControl('', Validators.required),
+      postalCodeSender: new FormControl('', Validators.required),
+      nameAddressee: new FormControl('', Validators.required),
+      lastNameAddressee: new FormControl('', Validators.required),
+      addressAddressee: new FormControl('', Validators.required),
+      phoneAddressee: new FormControl('', Validators.required),
+      documentAddressee: new FormControl('', Validators.required),
+      postalCodeAddressee: new FormControl('', Validators.required),
       departmentAddressee: new FormControl('', Validators.required),
       cityAddressee: new FormControl('', Validators.required),
-      contentGuide: new FormControl('Cables', Validators.required),
-      weightGuide: new FormControl('4', Validators.required),
-      unitGuide: new FormControl('10', Validators.required),
-      volumeGuide: new FormControl('1', Validators.required),
+      contentGuide: new FormControl('', Validators.required),
+      weightGuide: new FormControl('', Validators.required),
+      unitGuide: new FormControl('', Validators.required),
+      volumeGuide: new FormControl('', Validators.required),
       declaredValueGuide: new FormControl(0, Validators.required),
       serviceValueGuide: new FormControl(0, Validators.required),
       othersValueGuide: new FormControl(0, Validators.required),
@@ -150,6 +150,28 @@ export class BranchOfficesComponent implements OnInit {
       this.listGuides.paginator = this.paginator;
     }, error => {
       this.toastService.error(this.translateService.instant('ERRORS.LOAD_DATA'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  getPerson(type: string, event: any) {
+    const { target } = event;
+    this.guidesService.getPerson(target.value).subscribe(response => {
+      if (response !== null){
+        if (type === 'origin') {
+          this.formGuide.controls.nameSender.setValue(response.first_name_person);
+          this.formGuide.controls.lastNameSender.setValue(response.last_name_person);
+          this.formGuide.controls.phoneSender.setValue(response.phone_person);
+          this.formGuide.controls.postalCodeSender.setValue(response.postal_code_person);
+        } else {
+          this.formGuide.controls.nameAddressee.setValue(response.first_name_person);
+          this.formGuide.controls.lastNameAddressee.setValue(response.last_name_person);
+          this.formGuide.controls.phoneAddressee.setValue(response.phone_person);
+          this.formGuide.controls.addressAddressee.setValue(response.address_person === null ? '' : response.address_person);
+          this.formGuide.controls.postalCodeAddressee.setValue(response.postal_code_person);
+        }
+      }
+    }, error => {
+      console.log(error);
     });
   }
 }

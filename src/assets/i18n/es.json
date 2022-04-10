@@ -7,7 +7,7 @@
     "TRACK_GUIDE": "Rastrea tu guía",
     "NUMBER_GUIDE": "Número de guía",
     "ROLE": "Rol",
-    "ADMINISTRATOR": "Administrador",
+    "ADMIN": "Administrador",
     "POINT": "Punto de atención",
     "USERS_MANAGEMENT": "Gestión de usuarios",
     "ROUTES_MANAGEMENT": "Gestión de rutas",
@@ -49,6 +49,8 @@
     "ORIGIN_CITY": "Origen",
     "TARGET_CITY": "Destino",
     "TRACK_GUIDE_RESULT": "El estado de tu guía es:",
+    "USER_DELETE": "Tu usuario ha sido eliminado",
+    "USER_DELETE_TITLE": "Eliminación de usuarios",
     "STATUS_GUIDE": {
       "0": "Creado",
       "1": "En regional",
@@ -81,7 +83,10 @@
     "TITLE": "Lo sentimos",
     "GUIDE_GENERATE": "Tu guía no se pudo generar, intenta de nuevo",
     "ROUTES": "Tus rutas no se puedieron crear, intenta de nuevo",
+    "ROUTES_LIST": "Tus rutas no se puedieron cargar, intenta de nuevo",
     "USER": "Tu usuario no puso generado",
-    "TRACK_GUIDE": "No pudimos encontrar el estado de tu guía, intenta de nuevo"
+    "TRACK_GUIDE": "No pudimos encontrar el estado de tu guía, intenta de nuevo",
+    "USER_DELETE": "Tu usuario no se pudo eliminar, intenta de nuevo",
+    "USER_PASSWORD": "Tu usuario o clave son invalidos"
   }
 }

@@ -7,7 +7,7 @@
     "TRACK_GUIDE": "Track your guide",
     "NUMBER_GUIDE": "Guide number",
     "ROLE": "Role",
-    "ADMINISTRATOR": "Administrator",
+    "ADMIN": "Administrator",
     "POINT": "Point of attention",
     "USERS_MANAGEMENT": "User Management",
     "ROUTES_MANAGEMENT": "Routes Management",
@@ -49,6 +49,8 @@
     "ORIGIN_CITY": "Origin",
     "TARGET_CITY": "Target",
     "TRACK_GUIDE_RESULT": "Your guide status is:",
+    "USER_DELETE": "Your user has been deleted",
+    "USER_DELETE_TITLE": "User Delete",
     "STATUS_GUIDE": {
       "0": "Created",
       "1": "In regional",
@@ -81,7 +83,10 @@
     "TITLE": "Sorry",
     "GUIDE_GENERATE": "Your guide could not be generated, please try again",
     "ROUTES": "Your routes could not be created, please try again",
+    "ROUTES_LIST": "Your routes could not be loaded, please try again",
     "USER": "Your user did not put generated",
-    "TRACK_GUIDE": "We couldn't find your guide status, please try again"
+    "TRACK_GUIDE": "We couldn't find your guide status, please try again",
+    "USER_DELETE": "Your user could not be deleted, please try again",
+    "USER_PASSWORD": "Your username or password is invalid"
   }
 }
