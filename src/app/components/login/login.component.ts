@@ -45,9 +45,16 @@ export class LoginComponent implements OnInit {
     signInWithEmailAndPassword(auth, obj.user, btoa(obj.password)).then(async (userCredential) => {
       const docRef = await doc(getFirestore(), `users/${userCredential.user.uid}`);
       const roleUser = await getDoc(docRef);
-      // @ts-ignore
-      sessionStorage.setItem('role', roleUser.data().role);
-      this.router.navigate(['home']);
+      if (roleUser.data()) {
+        // @ts-ignore
+        sessionStorage.setItem('role', roleUser.data().role);
+        console.log(userCredential);
+        // @ts-ignore
+        sessionStorage.setItem('tk', userCredential.user.accessToken);
+        this.router.navigate(['home']);
+      } else {
+        this.toastService.error(this.translateService.instant('ERRORS.USER_UNDEFINED'), this.translateService.instant('ERRORS.TITLE'));
+      }
     }).catch(() => {
       this.toastService.error(this.translateService.instant('ERRORS.USER_PASSWORD'), this.translateService.instant('ERRORS.TITLE'));
     })
@@ -58,7 +65,10 @@ export class LoginComponent implements OnInit {
       if (response !== null) {
         this.stepGuide = response.status_guide;
         this.isStatusGuide = true;
-        setTimeout(() => { this.isStatusGuide = false; }, 30000);
+        setTimeout(() => {
+          this.isStatusGuide = false;
+          this.formTrack.controls.id.setValue('');
+        }, 30000);
       } else {
         this.toastService.error(this.translateService.instant('ERRORS.TRACK_GUIDE'), this.translateService.instant('ERRORS.TITLE'));
       }

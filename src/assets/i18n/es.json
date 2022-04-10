@@ -35,7 +35,7 @@
     "NOTES": "Notas",
     "ES": "Español",
     "EN": "Ingles",
-    "CREATE_UPDATE_USER": "Crear / Actualizar usuario",
+    "CREATE_UPDATE_USER": "Crear usuario",
     "ACTIONS": "Acciones",
     "ROUTE_NAME": "Nombre de la ruta",
     "DESCRIPTION": "Descripción",
@@ -44,7 +44,7 @@
     "NEW_ROUTE": "Nueva ruta",
     "SUCCESS_ROUTES": "Tus rutas han sido creadas de manera exitosa",
     "SUCCESS_USER_TITLE": "Creación de usuarios",
-    "SUCCESS_USER": "Tu usuario ha sido creado / actualizado exitosamente",
+    "SUCCESS_USER": "Tu usuario ha sido creado exitosamente",
     "HISTORY_GUIDES": "Historial de guías",
     "ORIGIN_CITY": "Origen",
     "TARGET_CITY": "Destino",
@@ -70,7 +70,8 @@
     "EDIT_USER": "Editar usuario",
     "NEW_GUIDE": "Generar guía",
     "DELETE": "Eliminar",
-    "SAVE": "Guardar"
+    "SAVE": "Guardar",
+    "DOWNLOAD": "Descargar"
   },
   "ERRORS": {
     "USER_FORMAT": "Por favor ingrese un correo válido",
@@ -87,6 +88,7 @@
     "USER": "Tu usuario no puso generado",
     "TRACK_GUIDE": "No pudimos encontrar el estado de tu guía, intenta de nuevo",
     "USER_DELETE": "Tu usuario no se pudo eliminar, intenta de nuevo",
-    "USER_PASSWORD": "Tu usuario o clave son invalidos"
+    "USER_PASSWORD": "Tu usuario o clave son invalidos",
+    "USER_UNDEFINED": "Tu usuario no existe, comunicate con tu administrador"
   }
 }

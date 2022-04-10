@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
 
   logout(): void {
     sessionStorage.removeItem('role');
+    sessionStorage.removeItem('tk');
     this.router.navigate(['login']);
   }
 

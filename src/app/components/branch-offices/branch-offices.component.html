@@ -209,6 +209,11 @@
     </mat-tab>
     <mat-tab label="{{'LABELS.HISTORY_GUIDES' | translate}}">
       <div class="content-history">
+        <div class="buttons-table">
+          <button mat-raised-button color="warn" *ngIf="listGuides.data.length > 0" (click)="downloadHistoryGuides()">
+            <mat-icon>cloud_download</mat-icon>&nbsp;&nbsp;{{'BUTTONS.DOWNLOAD' | translate}}
+          </button>
+        </div>
         <table mat-table [dataSource]="listGuides" matSort>
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>No.</th>

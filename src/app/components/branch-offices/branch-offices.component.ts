@@ -174,4 +174,32 @@ export class BranchOfficesComponent implements OnInit {
       console.log(error);
     });
   }
+
+  downloadHistoryGuides(): any {
+    const csvString = [
+      [ 'ID',
+        this.translateService.instant('LABELS.REQUEST_DATE'),
+        this.translateService.instant('LABELS.ORIGIN_CITY') ,
+        this.translateService.instant('LABELS.TARGET_CITY'),
+        this.translateService.instant('LABELS.CONTENT'),
+        this.translateService.instant('LABELS.STATUS')
+      ],
+      ...this.listGuides.data.map((item: any) => [
+        item.id_guide,
+        item.date_admission,
+        item.origin_city,
+        item.destination_city,
+        item.content_guide,
+        this.translateService.instant('LABELS.STATUS_GUIDE.' + item.status_guide)
+      ])
+    ].map(e => e.join(",")).join("\n");
+    let blob = new Blob([csvString], {type: 'text/csv;charset=utf-8;'});
+
+    const e = document.createElement('a');
+    e.href = URL.createObjectURL(blob);
+    e.download = "HistoryGuides.csv";
+    document.body.appendChild(e);
+    e.click();
+    document.body.removeChild(e);
+  }
 }

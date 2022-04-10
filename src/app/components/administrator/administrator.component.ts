@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { RoutesService} from '../../services/routes-service';
-import { createUserWithEmailAndPassword, getAuth, deleteUser } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, deleteUser, User } from 'firebase/auth';
 import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { MatTableDataSource } from "@angular/material/table";
 
@@ -65,7 +65,7 @@ export class AdministratorComponent implements OnInit {
 
   ngOnInit(): void {
     this.setCurrentPosition();
-    this.listUser();
+    this.usersList();
   }
 
   private setCurrentPosition() {
@@ -79,7 +79,7 @@ export class AdministratorComponent implements OnInit {
 
   onMapReady(map: any) {
     this.map = map;
-    //this.listRoutes();
+    this.listRoutes();
   }
 
   initDrawingManager() {
@@ -237,7 +237,7 @@ export class AdministratorComponent implements OnInit {
             //@ts-ignore
             this.formDirective.resetForm();
             this.formUsers.reset();
-            this.listUser();
+            this.usersList();
             this.toastService.success(this.translateService.instant('LABELS.SUCCESS_USER'), this.translateService.instant('LABELS.SUCCESS_USER_TITLE'));
           }).catch((error) => {
             this.viewError();
@@ -253,16 +253,15 @@ export class AdministratorComponent implements OnInit {
   }
 
   deleteUser(user: any) {
-    deleteUser(user).then((response) => {
-      deleteDoc(doc(getFirestore(), 'users', user.uid));
+    deleteDoc(doc(getFirestore(), 'users', user.uid)).then(() => {
       this.toastService.success(this.translateService.instant('LABELS.USER_DELETE'), this.translateService.instant('LABELS.USER_DELETE_TITLE'));
-    }).catch((error) => {
-      console.log(error);
+      this.usersList();
+    }).catch(() => {
       this.toastService.error(this.translateService.instant('ERRORS.USER_DELETE'), this.translateService.instant('ERRORS.TITLE'));
     });
   }
 
-  async listUser() {
+  async usersList() {
     const docs = await getDocs(collection(getFirestore(), 'users/'));
     const users: any[] | undefined = [];
     docs.forEach(doc => {

@@ -7,5 +7,6 @@ h2:first-child{margin-top:1rem}
 .amount-input{text-align:right}
 input.amount-input::-webkit-outer-spin-button,input.amount-input::-webkit-inner-spin-button{display:none}
 input.amount-input{-moz-appearance:textfield}
+.buttons-table{margin-bottom:1rem;text-align:end;}
 ::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
 ::ng-deep td.mat-cell.cdk-cell{text-align: center;}

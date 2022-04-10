@@ -35,7 +35,7 @@
     "NOTES": "Notes",
     "ES": "Spanish",
     "EN": "English",
-    "CREATE_UPDATE_USER": "Create / Update User",
+    "CREATE_UPDATE_USER": "Create user",
     "ACTIONS": "Actions",
     "ROUTE_NAME": "Route name",
     "DESCRIPTION": "Description",
@@ -44,7 +44,7 @@
     "NEW_ROUTE": "New Route",
     "SUCCESS_ROUTES": "Your routes have been successfully created",
     "SUCCESS_USER_TITLE": "Create users",
-    "SUCCESS_USER": "Your user has been created / updated successfully",
+    "SUCCESS_USER": "Your user has been created successfully",
     "HISTORY_GUIDES": "History Guides",
     "ORIGIN_CITY": "Origin",
     "TARGET_CITY": "Target",
@@ -70,7 +70,8 @@
     "EDIT_USER": "Edit user",
     "NEW_GUIDE": "Generate Guide",
     "DELETE": "Delete",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "DOWNLOAD": "Download"
   },
   "ERRORS": {
     "USER_FORMAT": "Please enter a valid email",
@@ -87,6 +88,7 @@
     "USER": "Your user did not put generated",
     "TRACK_GUIDE": "We couldn't find your guide status, please try again",
     "USER_DELETE": "Your user could not be deleted, please try again",
-    "USER_PASSWORD": "Your username or password is invalid"
+    "USER_PASSWORD": "Your username or password is invalid",
+    "USER_UNDEFINED": "Your user does not exist, contact your administrator"
   }
 }

@@ -14,22 +14,23 @@ import { MatInputModule } from "@angular/material/input";
 import { AngularFireModule } from "@angular/fire/compat";
 import { MatTableModule } from "@angular/material/table";
 import { BrowserModule } from '@angular/platform-browser';
-import { GuidesService } from "./services/guides-service";
-import { environment } from "../environments/environment";
-import { RoutesService } from "./services/routes-service";
-import { MatSelectModule } from "@angular/material/select";
-import { MatButtonModule } from "@angular/material/button";
-import { CustomValidators } from "./utils/CustomValidators";
-import { MatNativeDateModule } from "@angular/material/core";
-import { MatStepperModule } from "@angular/material/stepper";
-import { ColombiaService } from "./services/colombia-service";
-import {MatPaginatorModule} from "@angular/material/paginator";
+import { GuidesService } from './services/guides-service';
+import { environment } from '../environments/environment';
+import { RoutesService } from './services/routes-service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomValidators } from './utils/CustomValidators';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
+import { AuthInterceptor } from './services/auth-Interceptor';
+import { ColombiaService } from './services/colombia-service';
 import { HomeComponent } from './components/home/home.component';
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LoginComponent } from './components/login/login.component';
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministratorComponent } from './components/administrator/administrator.component';
 import { BranchOfficesComponent } from './components/branch-offices/branch-offices.component';
@@ -93,7 +94,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     RoutesService,
     GuidesService,
     ColombiaService,
-    CustomValidators
+    CustomValidators,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
