@@ -13,7 +13,7 @@ export class RoutesService {
   }
 
   createRoute(route: any): Observable<any> {
-    return this.http.post(`${environment.apiPolygons}/api/polygon`, { route }).pipe((response: any) => response);
+    return this.http.post(`${environment.apiPolygons}/api/polygon`, route).pipe((response: any) => response);
   }
 
   deleteRoute(id: number): Observable<any> {

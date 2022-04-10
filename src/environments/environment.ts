@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   apiCountry: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
   apiGuides: 'https://envia-guide.herokuapp.com',
-  apiPolygons: 'http://localhost:8092',
+  apiPolygons: 'http://localhost:8080',
   apiKeyMaps: 'AIzaSyDybihmidjkWncTMrLuqnInXXkNOiDDx14',
   firebaseConfig: {
     apiKey: "AIzaSyCM1Hi8zbT5UeO60u0TfE0fkDMZmtQxNYY",

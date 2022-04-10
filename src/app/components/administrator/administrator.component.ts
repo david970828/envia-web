@@ -8,7 +8,6 @@ import { RoutesService} from '../../services/routes-service';
 import { createUserWithEmailAndPassword, getAuth, deleteUser, User } from 'firebase/auth';
 import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { MatTableDataSource } from "@angular/material/table";
-
 declare const google: any;
 
 @Component({
@@ -31,6 +30,8 @@ export class AdministratorComponent implements OnInit {
   formUsers: FormGroup;
   formPolygons: FormGroup;
   displayedColumns: string[];
+  displayedColumnsPolygons: string[];
+  isCreatingPolygon: boolean;
   listUsers: MatTableDataSource<any>;
   @ViewChild(MatPaginator)
   paginator: MatPaginator | undefined;
@@ -50,6 +51,13 @@ export class AdministratorComponent implements OnInit {
       }
     );
 
+    this.formPolygons = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+      positions: new FormControl('', [Validators.required]),
+      color: new FormControl('', [Validators.required]),
+    });
+
     this.lat = 0;
     this.lng = 0;
     this.hide = true;
@@ -57,9 +65,10 @@ export class AdministratorComponent implements OnInit {
     this.selectedArea = 0;
     this.hideConfirm = true;
     this.selectedShape = [];
-    this.formPolygons = new FormGroup({});
+    this.isCreatingPolygon = false;
     this.listUsers = new MatTableDataSource<any>();
     this.displayedColumns = ['id', 'user', 'role', 'actions'];
+    this.displayedColumnsPolygons = ['color', 'name', 'description', 'actions'];
     this.listPolygons = [];
   }
 
@@ -100,6 +109,7 @@ export class AdministratorComponent implements OnInit {
     };
     this.drawingManager = new google.maps.drawing.DrawingManager(options);
     this.drawingManager.setMap(this.map);
+    this.isCreatingPolygon = true;
     google.maps.event.addListener(this.drawingManager, 'overlaycomplete', (event: any) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           const paths = event.overlay.getPaths();
@@ -144,24 +154,10 @@ export class AdministratorComponent implements OnInit {
     polygon.positions = this.getPointList(event.overlay.getPath());
 
     this.selectedShape.push(polygon);
-    this.formPolygons.addControl('name' + polygon.id, new FormControl('', [Validators.required]));
-    this.formPolygons.addControl('description' + polygon.id, new FormControl('', [Validators.required]));
-    this.formPolygons.addControl('positions' + polygon.id, new FormControl(polygon.positions, [Validators.required]));
-  }
-
-  deletePolygon(id: number) {
-    if (this.selectedShape.length > 0) {
-      this.selectedShape.map(item => {
-        if (item.id === id) {
-          item.setMap(null);
-          this.selectedArea = 0;
-        }
-      });
-      this.formPolygons.removeControl('name' + id);
-      this.formPolygons.removeControl('description' + id);
-      this.formPolygons.removeControl('positions' + id);
-      this.selectedShape= this.selectedShape.filter(item=> {return item.id !== id});
-    }
+    this.formPolygons.controls.name.setValue('');
+    this.formPolygons.controls.description.setValue('');
+    this.formPolygons.controls.positions.setValue(polygon.positions);
+    this.formPolygons.controls.color.setValue(polygon.color);
   }
 
   getPointList(path: any) {
@@ -175,53 +171,74 @@ export class AdministratorComponent implements OnInit {
     return pointList;
   }
 
-  uploadPolygons(obj: any) {
-    let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
-      return { lat: item.latitude, lng: item.longitude }
-    });
+  uploadPolygons(list: any[]) {
+    let listTemp: any[] = [];
+    list.forEach(obj => {
+      let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
+        return { lat: item.latitude, lng: item.longitude }
+      });
 
-    const fill_color = this.rgbColor();
-    let polygon = new google.maps.Polygon({
-      path: positions,
-      map: this.map,
-      strokeColor: fill_color,
-      fillColor: fill_color,
-      strokeWeight: 3,
-      id: obj.id,
-      positions: obj.positions,
-      color: fill_color
-    });
+      const fill_color = this.rgbColor();
+      let polygon = new google.maps.Polygon({
+        path: positions,
+        map: this.map,
+        strokeColor: fill_color,
+        fillColor: fill_color,
+        strokeWeight: 3,
+        id: obj.id,
+        positions: obj.positions,
+        color: fill_color
+      });
 
-    let map = this.map;
-    let popup = new google.maps.InfoWindow();
-    polygon.addListener('click', function(e: any) {
-      popup.setContent('Ruta: ' + obj.name);
-      popup.setPosition(e.latLng);
-      popup.open(map);
+      let map = this.map;
+      let popup = new google.maps.InfoWindow();
+      polygon.addListener('click', function(e: any) {
+        popup.setContent('Ruta: ' + obj.name);
+        popup.setPosition(e.latLng);
+        popup.open(map);
+      });
+      listTemp.push({...obj, color: polygon.color});
+      this.selectedShape.push(polygon);
     });
-
-    this.selectedShape.push(polygon);
-    this.formPolygons.addControl('name' + obj.id, new FormControl(obj.name, [Validators.required]));
-    this.formPolygons.addControl('description' + obj.id, new FormControl(obj.description, [Validators.required]));
-    this.formPolygons.addControl('positions' + obj.id, new FormControl(positions, [Validators.required]));
+    this.listPolygons = listTemp;
   }
 
   savePolygon() {
-    let listPolygons: {}[] = [];
-    this.selectedShape.forEach(item => {
-      let polygon = {
-        id: item.id,
-        name: this.formPolygons.controls['name' + item.id].value,
-        description: this.formPolygons.controls['description' + item.id].value,
-        positions: this.formPolygons.controls['positions' + item.id].value.map((item: { lat: any; lng: any; }) => {
-          return {latitude: item.lat, longitude: item.lng}
-        })
-      };
-      listPolygons.push(polygon);
+    let polygon = {
+      name: this.formPolygons.controls.name.value,
+      description: this.formPolygons.controls.description.value,
+      positions: this.formPolygons.controls.positions.value.map((item: { lat: any; lng: any; }) => {
+        return {latitude: item.lat, longitude: item.lng};
+      })
+    };
+
+    this.routesService.createRoute(polygon).subscribe(() => {
+      this.listPolygons = [];
+      this.selectedShape = [];
+      this.listRoutes();
+      this.isCreatingPolygon = false;
+      this.toastService.success(this.translateService.instant('LABELS.SUCCESS_ROUTES'), this.translateService.instant('LABELS.NEW_ROUTE'));
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.ROUTES'), this.translateService.instant('ERRORS.TITLE'));
     });
-    sessionStorage.setItem('routes', JSON.stringify(listPolygons));
-    this.toastService.success(this.translateService.instant('LABELS.SUCCESS_ROUTES'), this.translateService.instant('LABELS.NEW_ROUTE'));
-    //this.toastService.error(this.translateService.instant('ERRORS.ROUTES'), this.translateService.instant('ERRORS.TITLE'));
+  }
+
+  deletePolygon(id: number) {
+    this.routesService.deleteRoute(id).subscribe(() => {
+      if (this.selectedShape.length > 0) {
+        this.selectedShape.map(item => {
+          if (item.id === id) {
+            item.setMap(null);
+            this.selectedArea = 0;
+          }
+        });
+        this.selectedShape = this.selectedShape.filter(item => { return item.id !== id });
+        this.listRoutes();
+        this.toastService.success(this.translateService.instant('LABELS.DELETE_ROUTE'), this.translateService.instant('LABELS.ROUTES_MANAGEMENT'));
+      }
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.ROUTES_DELETE'), this.translateService.instant('ERRORS.TITLE'));
+    });
   }
 
   createUser() {
@@ -274,10 +291,7 @@ export class AdministratorComponent implements OnInit {
 
   listRoutes() {
     this.routesService.listRoutes().subscribe(response => {
-      this.listPolygons = response;
-      this.listPolygons.forEach((plg, index) => {
-        this.uploadPolygons(this.listPolygons[index]);
-      });
+      this.uploadPolygons(response);
     }, (error) => {
       this.toastService.error(this.translateService.instant('ERRORS.ROUTES_LIST'), this.translateService.instant('ERRORS.TITLE'));
     })

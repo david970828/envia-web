@@ -43,6 +43,7 @@
     "SUCCESS_GUIDE": "Your guide has been generated",
     "NEW_ROUTE": "New Route",
     "SUCCESS_ROUTES": "Your routes have been successfully created",
+    "DELETE_ROUTE": "Your route was successfully deleted",
     "SUCCESS_USER_TITLE": "Create users",
     "SUCCESS_USER": "Your user has been created successfully",
     "HISTORY_GUIDES": "History Guides",
@@ -51,6 +52,7 @@
     "TRACK_GUIDE_RESULT": "Your guide status is:",
     "USER_DELETE": "Your user has been deleted",
     "USER_DELETE_TITLE": "User Delete",
+    "COLOR": "Color",
     "STATUS_GUIDE": {
       "0": "Created",
       "1": "In regional",
@@ -85,6 +87,7 @@
     "GUIDE_GENERATE": "Your guide could not be generated, please try again",
     "ROUTES": "Your routes could not be created, please try again",
     "ROUTES_LIST": "Your routes could not be loaded, please try again",
+    "ROUTES_DELETE": "Your route could not be deleted, please try again",
     "USER": "Your user did not put generated",
     "TRACK_GUIDE": "We couldn't find your guide status, please try again",
     "USER_DELETE": "Your user could not be deleted, please try again",

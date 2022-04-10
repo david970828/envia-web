@@ -61,7 +61,7 @@
         </div>
       </form>
 
-      <table mat-table [dataSource]="listUsers">
+      <table mat-table [dataSource]="listUsers" *ngIf="listUsers.data.length > 0">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> No. </th>
           <td mat-cell *matCellDef="let element; let i = index">{{i}}</td>
@@ -95,33 +95,61 @@
     <mat-tab label="{{'LABELS.ROUTES_MANAGEMENT' | translate}}">
       <div class="content-polygon-container">
         <div class="first-panel">
-          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
-          <button mat-raised-button color="warn" style="margin-top:1rem" (click)="initDrawingManager()">{{'LABELS.NEW_ROUTE' | translate}}</button>
-        </div>
-        <div class="second-panel">
-          <form novalidate [formGroup]="formPolygons">
-            <div *ngFor="let shape of selectedShape;">
-              <mat-icon [style.color]="shape.color">layers</mat-icon>
+          <div class="second-panel">
+            <button mat-raised-button color="warn" style="margin-top:1rem" (click)="initDrawingManager()" *ngIf="!isCreatingPolygon">
+              <mat-icon>add_circle</mat-icon>&nbsp;{{'LABELS.NEW_ROUTE' | translate}}
+            </button>
+
+            <form novalidate [formGroup]="formPolygons" *ngIf="isCreatingPolygon">
+              <mat-icon [style.color]="formPolygons.controls.color.value">layers</mat-icon>
               <mat-form-field appearance="fill" floatLabel="always">
                 <mat-label>{{'LABELS.ROUTE_NAME' | translate}} *</mat-label>
-                <input type="text" formControlName="{{'name' + shape.id}}" matInput>
+                <input type="text" formControlName="{{'name'}}" matInput>
                 <mat-error>
                   {{'ERRORS.OBLIGATORY_FIELD' | translate}}
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="fill" floatLabel="always">
                 <mat-label>{{'LABELS.DESCRIPTION' | translate}} *</mat-label>
-                <input type="text" formControlName="{{'description' + shape.id}}" matInput>
+                <input type="text" formControlName="{{'description'}}" matInput>
                 <mat-error>
                   {{'ERRORS.OBLIGATORY_FIELD' | translate}}
                 </mat-error>
               </mat-form-field>
-              <button mat-raised-button color="warn" (click)="deletePolygon(shape.id)">{{'BUTTONS.DELETE' | translate}}</button>
-            </div>
-          </form>
-          <button mat-raised-button color="warn" style="margin-right:1.3rem;" *ngIf="selectedShape.length > 0" [disabled]="formPolygons.invalid" (click)="savePolygon()">
-            {{'BUTTONS.SAVE' | translate}}
-          </button>
+              <button mat-raised-button color="warn" [disabled]="formPolygons.invalid" (click)="savePolygon()">
+                {{'BUTTONS.SAVE' | translate}}
+              </button>
+            </form>
+          </div>
+
+          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
+
+          <table mat-table [dataSource]="listPolygons" *ngIf="listPolygons.length > 0">
+            <ng-container matColumnDef="color">
+              <th mat-header-cell *matHeaderCellDef>{{'LABELS.COLOR' | translate}}</th>
+              <td mat-cell *matCellDef="let element;"><mat-icon [style.color]="element.color">layers</mat-icon></td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>{{'LABELS.ROUTE_NAME' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element.name}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>{{'LABELS.DESCRIPTION' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{element.description}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>{{'LABELS.ACTIONS' | translate}}</th>
+              <td mat-cell *matCellDef="let element">
+                <mat-icon class="icon-color" (click)="deletePolygon(element.id)">delete</mat-icon>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsPolygons"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsPolygons;"></tr>
+          </table>
         </div>
       </div>
     </mat-tab>

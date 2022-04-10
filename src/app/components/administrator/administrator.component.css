@@ -1,9 +1,10 @@
 .content-container{display:flex;justify-content:space-evenly;padding:1rem;flex-wrap:wrap}
 .content-polygon-container{display:flex;padding:1rem;}
-.content-polygon-container div.first-panel{display: block;width:60%;text-align: right}
-.content-polygon-container div.second-panel{width: 40%;text-align: end;}
-.content-polygon-container div.second-panel form div{justify-content: space-evenly;display:flex;align-items:baseline;}
-agm-map{height: 600px !important;width:100%;}
+.content-polygon-container div.first-panel{display: block;width:100%;text-align: right}
+.content-polygon-container div.second-panel{margin-bottom:1rem}
+.content-polygon-container div.second-panel form{width:45%;display:flex;justify-content:space-between;margin:auto;align-items:baseline;}
+agm-map{height:400px !important;width:100%;}
+table{margin-top: 1rem !important;}
 table, mat-paginator{width:90%;margin:auto;text-align:center;}
 ::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
 ::ng-deep td.mat-cell.cdk-cell{text-align: center;}
@@ -12,7 +13,8 @@ h2:first-child{margin-top:1rem}
 button{height:2.4rem}
 .icon-color{color:#d4001b;cursor:pointer}
 @media(max-width:1330px) {
-  table,mat-paginator{width:98%;}
+  .content-polygon-container div.second-panel form{width:100%;}
+  table, mat-paginator{width:98%;}
   .content-polygon-container{display:block;}
   .content-polygon-container :is(div.first-panel, div.second-panel){width:100%}
 }

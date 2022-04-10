@@ -43,6 +43,7 @@
     "SUCCESS_GUIDE": "Tu guía ha sido generada",
     "NEW_ROUTE": "Nueva ruta",
     "SUCCESS_ROUTES": "Tus rutas han sido creadas de manera exitosa",
+    "DELETE_ROUTE": "Tu ruta fue eliminada de manera exitosa",
     "SUCCESS_USER_TITLE": "Creación de usuarios",
     "SUCCESS_USER": "Tu usuario ha sido creado exitosamente",
     "HISTORY_GUIDES": "Historial de guías",
@@ -51,6 +52,7 @@
     "TRACK_GUIDE_RESULT": "El estado de tu guía es:",
     "USER_DELETE": "Tu usuario ha sido eliminado",
     "USER_DELETE_TITLE": "Eliminación de usuarios",
+    "COLOR": "Color",
     "STATUS_GUIDE": {
       "0": "Creado",
       "1": "En regional",
@@ -85,6 +87,7 @@
     "GUIDE_GENERATE": "Tu guía no se pudo generar, intenta de nuevo",
     "ROUTES": "Tus rutas no se puedieron crear, intenta de nuevo",
     "ROUTES_LIST": "Tus rutas no se puedieron cargar, intenta de nuevo",
+    "ROUTES_DELETE": "Tu ruta no se pudo eliminar, intenta de nuevo",
     "USER": "Tu usuario no puso generado",
     "TRACK_GUIDE": "No pudimos encontrar el estado de tu guía, intenta de nuevo",
     "USER_DELETE": "Tu usuario no se pudo eliminar, intenta de nuevo",
