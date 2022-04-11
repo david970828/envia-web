@@ -8,6 +8,7 @@ import { RoutesService} from '../../services/routes-service';
 import { createUserWithEmailAndPassword, getAuth, deleteUser, User } from 'firebase/auth';
 import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { MatTableDataSource } from "@angular/material/table";
+import {RoleEnum} from "../../enums/role-enum";
 declare const google: any;
 
 @Component({
@@ -22,6 +23,7 @@ export class AdministratorComponent implements OnInit {
   lng: number;
   hide: boolean;
   isEdit: boolean;
+  roleList: string[];
   listPolygons: any[];
   selectedShape: any[];
   drawingManager: any;
@@ -66,6 +68,7 @@ export class AdministratorComponent implements OnInit {
     this.hideConfirm = true;
     this.selectedShape = [];
     this.isCreatingPolygon = false;
+    this.roleList = Object.values(RoleEnum);
     this.listUsers = new MatTableDataSource<any>();
     this.displayedColumns = ['id', 'user', 'role', 'actions'];
     this.displayedColumnsPolygons = ['color', 'name', 'description', 'actions'];

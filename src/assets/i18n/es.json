@@ -9,6 +9,8 @@
     "ROLE": "Rol",
     "ADMIN": "Administrador",
     "POINT": "Punto de atención",
+    "OPERATOR": "Operador",
+    "DELIVERY": "Reparto",
     "USERS_MANAGEMENT": "Gestión de usuarios",
     "ROUTES_MANAGEMENT": "Gestión de rutas",
     "GUIDES_MANAGEMENT": "Gestión de guías",
@@ -52,6 +54,7 @@
     "TRACK_GUIDE_RESULT": "El estado de tu guía es:",
     "USER_DELETE": "Tu usuario ha sido eliminado",
     "USER_DELETE_TITLE": "Eliminación de usuarios",
+    "USER_PERMISSION": "Tu usuario no tiene los permisos para acceder al modulo, comunicate con tu administrador",
     "COLOR": "Color",
     "STATUS_GUIDE": {
       "0": "Creado",

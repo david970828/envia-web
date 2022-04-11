@@ -9,6 +9,8 @@
     "ROLE": "Role",
     "ADMIN": "Administrator",
     "POINT": "Point of attention",
+    "OPERATOR": "Operator",
+    "DELIVERY": "Delivery",
     "USERS_MANAGEMENT": "User Management",
     "ROUTES_MANAGEMENT": "Routes Management",
     "GUIDES_MANAGEMENT": "Guide Management",
@@ -52,6 +54,7 @@
     "TRACK_GUIDE_RESULT": "Your guide status is:",
     "USER_DELETE": "Your user has been deleted",
     "USER_DELETE_TITLE": "User Delete",
+    "USER_PERMISSION": "Your user does not have the permissions to access the module, contact your administrator",
     "COLOR": "Color",
     "STATUS_GUIDE": {
       "0": "Created",

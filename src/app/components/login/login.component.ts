@@ -6,6 +6,7 @@ import { GuidesService } from '../../services/guides-service';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {RoleEnum} from "../../enums/role-enum";
 
 @Component({
   selector: 'app-login',
@@ -47,11 +48,16 @@ export class LoginComponent implements OnInit {
       const roleUser = await getDoc(docRef);
       if (roleUser.data()) {
         // @ts-ignore
-        sessionStorage.setItem('role', roleUser.data().role);
-        console.log(userCredential);
-        // @ts-ignore
-        sessionStorage.setItem('tk', userCredential.user.accessToken);
-        this.router.navigate(['home']);
+        const role = roleUser.data().role;
+        if (role === RoleEnum.ADMIN || role === RoleEnum.POINT) {
+          sessionStorage.setItem('role', role);
+          console.log(userCredential);
+          // @ts-ignore
+          sessionStorage.setItem('tk', userCredential.user.accessToken);
+          this.router.navigate(['home']);
+        } else {
+          this.toastService.error(this.translateService.instant('ERRORS.USER_PERMISSION'), this.translateService.instant('ERRORS.TITLE'));
+        }
       } else {
         this.toastService.error(this.translateService.instant('ERRORS.USER_UNDEFINED'), this.translateService.instant('ERRORS.TITLE'));
       }
