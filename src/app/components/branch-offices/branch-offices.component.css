@@ -1,6 +1,7 @@
 .content-container{display:grid;justify-content:center;padding:1rem;grid-template-columns:repeat(auto-fill,23em);justify-items:center}
-.content-footer{text-align:center;margin-bottom:2rem}
+.content-footer{display:flex;text-align:center;justify-content:center;    margin: 1rem auto;}
 .content-history{display:grid;padding:1rem;}
+.search-container{display:flex;justify-content:space-evenly;width:65%;margin:2rem auto 0;align-items: baseline;}
 h2{margin-left:7rem;color:#d4001b}
 h2:first-child{margin-top:1rem}
 .example-container .mat-form-field + .mat-form-field{margin-left:8px}
@@ -10,3 +11,8 @@ input.amount-input{-moz-appearance:textfield}
 .buttons-table{margin-bottom:1rem;text-align:end;}
 ::ng-deep th.mat-header-cell{text-align:center !important;background:#db4935c7;color:#FFF;font-size:1rem;}
 ::ng-deep td.mat-cell.cdk-cell{text-align: center;}
+
+@media(max-width:600px) {
+  .search-container{width:100%;}
+  .search-container h2{margin-left:0;}
+}

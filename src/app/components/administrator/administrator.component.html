@@ -1,7 +1,7 @@
 <div>
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="{{'LABELS.USERS_MANAGEMENT' | translate}}">
-      <form novalidate [formGroup]="formUsers" #formDirective="ngForm">
+      <form novalidate [formGroup]="formUsers" #formDirective>
         <h2>{{'LABELS.CREATE_UPDATE_USER' | translate}}</h2>
         <div class="content-container">
           <mat-form-field appearance="fill">
@@ -52,10 +52,10 @@
             </mat-select>
           </mat-form-field>
           <button mat-raised-button color="warn" *ngIf="!isEdit" (click)="createUser()" [disabled]="formUsers.invalid">
-            {{'BUTTONS.NEW_USER' | translate}}
+            {{'BUTTONS.NEW' | translate}}
           </button>
           <button mat-raised-button color="warn" *ngIf="isEdit" (click)="createUser()" [disabled]="formUsers.invalid">
-            {{'BUTTONS.EDIT_USER' | translate}}
+            {{'BUTTONS.EDIT' | translate}}
           </button>
         </div>
       </form>
@@ -86,9 +86,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                     showFirstLastButtons
-                     aria-label="Select page of periodic elements">
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 20]" *ngIf="listUsers.data.length > 5"
+                     showFirstLastButtons aria-label="Select page of periodic elements">
       </mat-paginator>
     </mat-tab>
     <mat-tab label="{{'LABELS.ROUTES_MANAGEMENT' | translate}}">
@@ -151,6 +150,79 @@
           </table>
         </div>
       </div>
+    </mat-tab>
+
+    <mat-tab label="{{'LABELS.VEHICLES_MANAGEMENT' | translate}}">
+      <form novalidate [formGroup]="formVehicles" #formDirectiveVehicle>
+        <h2>{{'LABELS.CREATE_VEHICLE' | translate}}</h2>
+        <div class="content-container">
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.NAMES' | translate}} *</mat-label>
+            <input type="text" formControlName="name" matInput placeholder="">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.PLATE' | translate}} *</mat-label>
+            <input type="text" formControlName="licensePlate" matInput placeholder="">
+            <mat-error>
+              {{'ERRORS.OBLIGATORY_FIELD' | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{'LABELS.ASSIGNED_ROUTE' | translate}} * </mat-label>
+            <mat-select formControlName="assignedRoute">
+              <mat-option *ngFor="let route of listPolygons" value="{{route.id}}" title="{{route.description}}">{{route.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="warn" *ngIf="!isEditVehicle" (click)="createVehicle()" [disabled]="formVehicles.invalid">
+            {{'BUTTONS.NEW' | translate}}
+          </button>
+          <button mat-raised-button color="warn" *ngIf="isEditVehicle" (click)="updateVehicle()" [disabled]="formVehicles.invalid">
+            {{'BUTTONS.UPDATE' | translate}}
+          </button>
+        </div>
+      </form>
+
+      <table mat-table [dataSource]="listVehicles" *ngIf="listVehicles.data.length > 0">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td mat-cell *matCellDef="let element;">{{element.id}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.NAMES' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{element.Nombre}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="licensePlate">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.PLATE' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{element.Placa}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedRoute">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.ASSIGNED_ROUTE' | translate}}</th>
+          <td mat-cell *matCellDef="let element">{{findAssignedRoute(element.RutaDefinida)}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>{{'LABELS.ACTIONS' | translate}}</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-icon *ngIf="!element.edit" class="icon-color" (click)="activeEditVehicle(element)">edit</mat-icon>
+            <mat-icon *ngIf="element.edit" class="icon-color" (click)="cancelEditVehicle(element)">cancel</mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsVehicles"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsVehicles;"></tr>
+      </table>
+      <mat-paginator #paginatorVehicles [pageSizeOptions]="[5, 10, 20]" *ngIf="listVehicles.data.length > 0"
+                     showFirstLastButtons aria-label="Select page of periodic elements">
+      </mat-paginator>
     </mat-tab>
   </mat-tab-group>
 </div>

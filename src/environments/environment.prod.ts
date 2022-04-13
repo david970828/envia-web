@@ -4,6 +4,7 @@ export const environment = {
   apiGuides: 'https://envia-guide.herokuapp.com',
   apiPolygons: 'http://localhost:8080',
   apiKeyMaps: 'AIzaSyDybihmidjkWncTMrLuqnInXXkNOiDDx14',
+  apiVehicles: 'http://mcrvehiculos.us-3.evennode.com',
   firebaseConfig: {
     apiKey: "AIzaSyCM1Hi8zbT5UeO60u0TfE0fkDMZmtQxNYY",
     authDomain: "envia-9b0b8.firebaseapp.com",

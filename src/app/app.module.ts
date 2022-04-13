@@ -20,18 +20,21 @@ import { RoutesService } from './services/routes-service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomValidators } from './utils/CustomValidators';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AuthInterceptor } from './services/auth-Interceptor';
 import { ColombiaService } from './services/colombia-service';
+import { VehiclesService } from './services/vehicles-service';
 import { HomeComponent } from './components/home/home.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LoginComponent } from './components/login/login.component';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { AdministratorComponent } from './components/administrator/administrator.component';
 import { BranchOfficesComponent } from './components/branch-offices/branch-offices.component';
 
@@ -59,6 +62,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatTableModule,
     MatButtonModule,
     MatSelectModule,
+    MatDividerModule,
     MatStepperModule,
     HttpClientModule,
     AppRoutingModule,
@@ -68,6 +72,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ReactiveFormsModule,
     MatNativeDateModule,
     BrowserAnimationsModule,
+    MatProgressSpinnerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -93,6 +98,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AuthService,
     RoutesService,
     GuidesService,
+    VehiclesService,
     ColombiaService,
     CustomValidators,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

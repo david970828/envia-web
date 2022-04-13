@@ -15,9 +15,12 @@ import { FormControl, FormGroup, FormGroupDirective, Validators } from "@angular
 export class BranchOfficesComponent implements OnInit {
 
   cityListSender: any;
-  formGuide: FormGroup;
+  isEditGuide: boolean;
   departmentsList: any;
+  formGuide: FormGroup;
+  formSearch: FormGroup;
   cityListAddressee: any;
+  isCreatingGuide: boolean;
   displayedColumns: string[];
   @ViewChild(MatPaginator)
   paginator: MatPaginator | undefined;
@@ -54,9 +57,16 @@ export class BranchOfficesComponent implements OnInit {
       notesGuide: new FormControl(''),
     });
 
+    this.formSearch = new FormGroup({
+        id: new FormControl('', [Validators.required])
+      },
+    );
+
+    this.isEditGuide = false;
     this.cityListSender = [];
     this.departmentsList = [];
     this.cityListAddressee = [];
+    this.isCreatingGuide = false;
     this.listGuides = new MatTableDataSource<any>();
     this.displayedColumns = ['id', 'date_admission', 'origin_city', 'destination_city', 'content_guide', 'status'];
   }
@@ -85,7 +95,22 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   newGuide(): void {
-    let data = {
+    this.isCreatingGuide = true;
+    this.guidesService.createGuide(this.getDataGuide()).subscribe(response => {
+      this.downloadFile(response);
+      this.getGuides();
+      // @ts-ignore
+      this.formDirective.resetForm();
+      this.formGuide.reset();
+      this.isCreatingGuide = false;
+    }, error => {
+        this.toastService.error(this.translateService.instant('ERRORS.GUIDE_GENERATE'), this.translateService.instant('ERRORS.TITLE'));
+      this.isCreatingGuide = false;
+    });
+  }
+
+  getDataGuide(): any {
+    return {
       guide: {
         status_guide: 0,
         date_admission: this.formGuide.controls.dateSentSender.value,
@@ -101,6 +126,7 @@ export class BranchOfficesComponent implements OnInit {
         freight_guide: 0
       },
       guide_person: {
+        origin_regional:  this.formGuide.controls.departmentSender.value,
         origin_city: this.formGuide.controls.citySender.value,
         destination_city: this.formGuide.controls.cityAddressee.value,
         destination_regional: this.formGuide.controls.departmentAddressee.value,
@@ -122,16 +148,7 @@ export class BranchOfficesComponent implements OnInit {
         document_person: this.formGuide.controls.documentAddressee.value,
         postal_code_person: this.formGuide.controls.postalCodeAddressee.value
       }
-    }
-    this.guidesService.createGuide(data).subscribe(response => {
-      this.downloadFile(response);
-      this.getGuides();
-      // @ts-ignore
-      this.formDirective.resetForm();
-      this.formGuide.reset();
-    }, error => {
-        this.toastService.error(this.translateService.instant('ERRORS.GUIDE_GENERATE'), this.translateService.instant('ERRORS.TITLE'));
-    });
+    };
   }
 
   downloadFile(response: any) {
@@ -201,5 +218,68 @@ export class BranchOfficesComponent implements OnInit {
     document.body.appendChild(e);
     e.click();
     document.body.removeChild(e);
+  }
+
+  searchGuide() {
+    this.guidesService.getGuide(this.formSearch.controls.id.value).subscribe((response) => {
+      if (response === null) {
+        this.toastService.error(this.translateService.instant('ERRORS.TRACK_GUIDE'), this.translateService.instant('ERRORS.TITLE'));
+        return;
+      }
+      this.mapperResponseToForm(response);
+      this.isEditGuide = true;
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.TRACK_GUIDE'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  updateGuide() {
+    this.guidesService.updateGuide(this.formSearch.controls.id.value, this.getDataGuide()).subscribe((response) => {
+      this.downloadFile(response);
+      this.getGuides();
+      // @ts-ignore
+      this.formDirective.resetForm();
+      this.formGuide.reset();
+      this.isEditGuide = false;
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.GUIDE_GENERATE'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  cancelEdit(): void {
+    this.isEditGuide = false;
+    // @ts-ignore
+    this.formDirective.resetForm();
+    this.formGuide.reset();
+    this.formSearch.reset();
+  }
+
+  mapperResponseToForm(response: any): void {
+      this.formGuide.controls.dateSentSender.setValue(response.date_admission);
+      this.formGuide.controls.nameSender.setValue(response.first_name_sender);
+      this.formGuide.controls.lastNameSender.setValue(response.last_name_sender);
+      this.formGuide.controls.departmentSender.setValue(response.origin_regional);
+      this.formGuide.controls.citySender.setValue(response.origin_city);
+      this.formGuide.controls.phoneSender.setValue(response.phone_sender);
+      this.formGuide.controls.documentSender.setValue(response.document_sender);
+      this.formGuide.controls.postalCodeSender.setValue(response.postal_code_sender);
+
+      this.formGuide.controls.documentAddressee.setValue(response.document_addressee);
+      this.formGuide.controls.nameAddressee.setValue(response.first_name_addressee);
+      this.formGuide.controls.lastNameAddressee.setValue(response.last_name_addressee);
+      this.formGuide.controls.addressAddressee.setValue(response.address_addressee_in_guide);
+      this.formGuide.controls.phoneAddressee.setValue(response.phone_addressee);
+      this.formGuide.controls.postalCodeAddressee.setValue(response.postal_code_addressee);
+      this.formGuide.controls.departmentAddressee.setValue(response.destination_regional);
+      this.formGuide.controls.cityAddressee.setValue(response.destination_city);
+
+      this.formGuide.controls.contentGuide.setValue(response.content_guide);
+      this.formGuide.controls.weightGuide.setValue(response.weight_in_guide);
+      this.formGuide.controls.unitGuide.setValue(response.units_in_guide);
+      this.formGuide.controls.volumeGuide.setValue(response.volume_in_guide);
+      this.formGuide.controls.declaredValueGuide.setValue(response.declared_value_guide);
+      this.formGuide.controls.serviceValueGuide.setValue(response.service_value_guide);
+      this.formGuide.controls.othersValueGuide.setValue(response.other_cost_guide);
+      this.formGuide.controls.notesGuide.setValue(response.notes_guide);
   }
 }

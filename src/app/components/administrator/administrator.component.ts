@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormGroupDirective, Validators } from "@angular/forms";
-import { CustomValidators } from '../../utils/CustomValidators';
+declare const google: any;
 import { ToastrService } from 'ngx-toastr';
+import { RoleEnum } from '../../enums/role-enum';
 import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RoutesService} from '../../services/routes-service';
-import { createUserWithEmailAndPassword, getAuth, deleteUser, User } from 'firebase/auth';
+import { MatTableDataSource } from '@angular/material/table';
+import { CustomValidators } from '../../utils/CustomValidators';
+import { VehiclesService } from '../../services/vehicles-service';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
-import { MatTableDataSource } from "@angular/material/table";
-import {RoleEnum} from "../../enums/role-enum";
-declare const google: any;
 
 @Component({
   selector: 'app-administrator',
@@ -30,18 +31,22 @@ export class AdministratorComponent implements OnInit {
   selectedArea: number;
   hideConfirm: boolean;
   formUsers: FormGroup;
+  isEditVehicle: boolean;
+  formVehicles: FormGroup;
   formPolygons: FormGroup;
   displayedColumns: string[];
-  displayedColumnsPolygons: string[];
   isCreatingPolygon: boolean;
+  displayedColumnsVehicles: string[];
+  displayedColumnsPolygons: string[];
   listUsers: MatTableDataSource<any>;
-  @ViewChild(MatPaginator)
-  paginator: MatPaginator | undefined;
-  @ViewChild(FormGroupDirective)
-  formDirective: FormGroupDirective | undefined;
+  listVehicles:  MatTableDataSource<any>;
+  @ViewChild('paginatorUsers') paginatorUsers: MatPaginator | undefined;
+  @ViewChild('paginatorVehicles') paginatorVehicles: MatPaginator | undefined;
+  @ViewChild(FormGroupDirective) formDirective: FormGroupDirective | undefined;
+  @ViewChild(FormGroupDirective) formDirectiveVehicle: FormGroupDirective | undefined;
 
   constructor(private toastService: ToastrService, private translateService: TranslateService,
-              private routesService: RoutesService) {
+              private routesService: RoutesService, private vehiclesService: VehiclesService) {
 
     this.formUsers = new FormGroup({
       user: new FormControl('', [Validators.required, Validators.email]),
@@ -60,24 +65,35 @@ export class AdministratorComponent implements OnInit {
       color: new FormControl('', [Validators.required]),
     });
 
+    this.formVehicles = new FormGroup({
+      id: new FormControl(''),
+      name: new FormControl('', [Validators.required]),
+      licensePlate: new FormControl('', [Validators.required]),
+      assignedRoute: new FormControl('', [Validators.required])
+    });
+
     this.lat = 0;
     this.lng = 0;
     this.hide = true;
     this.isEdit = false;
     this.selectedArea = 0;
+    this.listPolygons = [];
     this.hideConfirm = true;
     this.selectedShape = [];
+    this.isEditVehicle = false;
     this.isCreatingPolygon = false;
     this.roleList = Object.values(RoleEnum);
     this.listUsers = new MatTableDataSource<any>();
+    this.listVehicles = new MatTableDataSource<any>();
     this.displayedColumns = ['id', 'user', 'role', 'actions'];
     this.displayedColumnsPolygons = ['color', 'name', 'description', 'actions'];
-    this.listPolygons = [];
+    this.displayedColumnsVehicles = ['id', 'name', 'licensePlate', 'assignedRoute', 'actions'];
   }
 
   ngOnInit(): void {
     this.setCurrentPosition();
-    this.usersList();
+    this.getListUsers();
+    this.getListVehicles();
   }
 
   private setCurrentPosition() {
@@ -257,7 +273,7 @@ export class AdministratorComponent implements OnInit {
             //@ts-ignore
             this.formDirective.resetForm();
             this.formUsers.reset();
-            this.usersList();
+            this.getListUsers();
             this.toastService.success(this.translateService.instant('LABELS.SUCCESS_USER'), this.translateService.instant('LABELS.SUCCESS_USER_TITLE'));
           }).catch((error) => {
             this.viewError();
@@ -275,13 +291,13 @@ export class AdministratorComponent implements OnInit {
   deleteUser(user: any) {
     deleteDoc(doc(getFirestore(), 'users', user.uid)).then(() => {
       this.toastService.success(this.translateService.instant('LABELS.USER_DELETE'), this.translateService.instant('LABELS.USER_DELETE_TITLE'));
-      this.usersList();
+      this.getListUsers();
     }).catch(() => {
       this.toastService.error(this.translateService.instant('ERRORS.USER_DELETE'), this.translateService.instant('ERRORS.TITLE'));
     });
   }
 
-  async usersList() {
+  async getListUsers() {
     const docs = await getDocs(collection(getFirestore(), 'users/'));
     const users: any[] | undefined = [];
     docs.forEach(doc => {
@@ -289,7 +305,7 @@ export class AdministratorComponent implements OnInit {
     });
     this.listUsers =  new MatTableDataSource(users);
     //@ts-ignore
-    this.listUsers.paginator = this.paginator;
+    this.listUsers.paginator = this.paginatorUsers;
   }
 
   listRoutes() {
@@ -297,7 +313,7 @@ export class AdministratorComponent implements OnInit {
       this.uploadPolygons(response);
     }, (error) => {
       this.toastService.error(this.translateService.instant('ERRORS.ROUTES_LIST'), this.translateService.instant('ERRORS.TITLE'));
-    })
+    });
   }
 
   rgbColor(): string {
@@ -306,5 +322,67 @@ export class AdministratorComponent implements OnInit {
 
   getNumber(number: number) {
     return (Math.random() * number).toFixed(0);
+  }
+
+  getListVehicles() {
+    this.vehiclesService.listVehicles().subscribe(response => {
+      response.forEach((item: any) => { item.edit = false });
+      this.listVehicles =  new MatTableDataSource(response);
+      // @ts-ignore
+      this.listVehicles.paginator = this.paginatorVehicles;
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.VEHICLES_LIST'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  createVehicle() {
+    const vehicle = { ...(this.formVehicles.valid && this.formVehicles.value) };
+    this.vehiclesService.createVehicle(vehicle).subscribe(response => {
+      this.formVehicles.reset();
+      //@ts-ignore
+      this.formDirectiveVehicle.resetForm();
+      this.getListVehicles();
+      this.toastService.success(this.translateService.instant('LABELS.SUCCESS_VEHICLE'), this.translateService.instant('LABELS.VEHICLES_MANAGEMENT'));
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.VEHICLES_CREATE'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  updateVehicle(): void {
+    const vehicle = { ...(this.formVehicles.valid && this.formVehicles.value) };
+    this.vehiclesService.updateVehicle(vehicle).subscribe(response => {
+      this.formVehicles.reset();
+      //@ts-ignore
+      this.formDirectiveVehicle.resetForm();
+      this.isEditVehicle = false;
+      this.getListVehicles();
+      this.toastService.success(this.translateService.instant('LABELS.SUCCESS_UPDATE_VEHICLE'), this.translateService.instant('LABELS.VEHICLES_MANAGEMENT'));
+    }, (error) => {
+      this.toastService.error(this.translateService.instant('ERRORS.VEHICLES_CREATE'), this.translateService.instant('ERRORS.TITLE'));
+    });
+  }
+
+  activeEditVehicle(vehicle: any) {
+    this.formVehicles.controls.id.setValue(vehicle.id);
+    this.formVehicles.controls.name.setValue(vehicle.Nombre);
+    this.formVehicles.controls.licensePlate.setValue(vehicle.Placa);
+    this.formVehicles.controls.assignedRoute.setValue(vehicle.RutaDefinida);
+    this.listVehicles.data.forEach(item => {
+      item.edit = (vehicle.id === item.id) ? true : false;
+    });
+    this.isEditVehicle = true;
+  }
+
+  cancelEditVehicle(vehicle: any) {
+    this.formVehicles.reset();
+    //@ts-ignore
+    this.formDirectiveVehicle.resetForm();
+    vehicle.edit = false;
+    this.isEditVehicle = false;
+  }
+
+  findAssignedRoute(id: string): string {
+    const route = this.listPolygons.find(item => item.id === parseInt(id));
+    return route.name;
   }
 }

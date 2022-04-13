@@ -32,7 +32,7 @@
         <mat-label>{{'LABELS.NUMBER_GUIDE' |  translate}}</mat-label>
         <input type="text" matInput placeholder="0012345678900" formControlName="id">
       </mat-form-field>
-      <button mat-raised-button color="warn" (click)="trackGuide()" [disabled]="formTrack.invalid">{{'BUTTONS.TRACK' | translate}}</button>
+      <button mat-raised-button color="warn" (click)="trackGuide()" [disabled]="formTrack.invalid">{{'BUTTONS.SEARCH' | translate}}</button>
     </div>
   </div>
 <h2 *ngIf="isStatusGuide">{{'LABELS.TRACK_GUIDE_RESULT' | translate}}</h2>

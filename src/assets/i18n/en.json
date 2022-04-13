@@ -14,11 +14,12 @@
     "USERS_MANAGEMENT": "User Management",
     "ROUTES_MANAGEMENT": "Routes Management",
     "GUIDES_MANAGEMENT": "Guide Management",
+    "VEHICLES_MANAGEMENT": "Vehicles Management",
     "SENDER_DATA": "Sender data",
     "ADDRESSEE_DATA": "Recipient data",
     "GUIDE_DATA": "Package data",
     "REQUEST_DATE": "Request Date",
-    "NAMES": "Names",
+    "NAMES": "Name",
     "LASTNAMES": "Surnames",
     "DEPARTMENT": "Departments",
     "CITY": "City",
@@ -45,6 +46,8 @@
     "SUCCESS_GUIDE": "Your guide has been generated",
     "NEW_ROUTE": "New Route",
     "SUCCESS_ROUTES": "Your routes have been successfully created",
+    "SUCCESS_VEHICLE": "Your vehicle was successfully created",
+    "SUCCESS_UPDATE_VEHICLE": "Your vehicle was successfully updated",
     "DELETE_ROUTE": "Your route was successfully deleted",
     "SUCCESS_USER_TITLE": "Create users",
     "SUCCESS_USER": "Your user has been created successfully",
@@ -56,6 +59,10 @@
     "USER_DELETE_TITLE": "User Delete",
     "USER_PERMISSION": "Your user does not have the permissions to access the module, contact your administrator",
     "COLOR": "Color",
+    "PLATE": "Plate",
+    "ASSIGNED_ROUTE": "Assigned route",
+    "CREATE_VEHICLE": "Create vehicles",
+    "SEARCH_GUIDE": "Search your guide",
     "STATUS_GUIDE": {
       "0": "Created",
       "1": "In regional",
@@ -70,13 +77,15 @@
   "BUTTONS": {
     "LOGIN": "Login",
     "LOGOUT": "Close",
-    "TRACK": "Track",
-    "NEW_USER": "Create user",
-    "EDIT_USER": "Edit user",
+    "SEARCH": "Search",
+    "NEW": "Create",
+    "EDIT": "Edit",
     "NEW_GUIDE": "Generate Guide",
     "DELETE": "Delete",
     "SAVE": "Save",
-    "DOWNLOAD": "Download"
+    "DOWNLOAD": "Download",
+    "UPDATE": "Update",
+    "CANCEL": "Cancel"
   },
   "ERRORS": {
     "USER_FORMAT": "Please enter a valid email",
@@ -92,9 +101,12 @@
     "ROUTES_LIST": "Your routes could not be loaded, please try again",
     "ROUTES_DELETE": "Your route could not be deleted, please try again",
     "USER": "Your user did not put generated",
-    "TRACK_GUIDE": "We couldn't find your guide status, please try again",
+    "TRACK_GUIDE": "We couldn't find your guide, please try again",
     "USER_DELETE": "Your user could not be deleted, please try again",
     "USER_PASSWORD": "Your username or password is invalid",
-    "USER_UNDEFINED": "Your user does not exist, contact your administrator"
+    "USER_UNDEFINED": "Your user does not exist, contact your administrator",
+    "VEHICLES_LIST": "We couldn't get your vehicle list, please try again",
+    "VEHICLES_CREATE": "Your vehicle could not be created in the system, please try again",
+    "VEHICLES_UPDATE": "Your vehicle could not be updated in the system, please try again"
   }
 }
