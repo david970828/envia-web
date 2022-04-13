@@ -1,7 +1,7 @@
 <div>
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="{{'LABELS.GUIDES_MANAGEMENT' | translate}}">
-      <form novalidate [formGroup]="formSearch" #formDirectiveSearch>
+      <form novalidate [formGroup]="formSearch" #formDirectiveSearch="ngForm">
         <div class="search-container">
           <h2>{{'LABELS.SEARCH_GUIDE' | translate}}</h2>
           <mat-form-field appearance="fill">
@@ -222,10 +222,10 @@
           <button mat-raised-button *ngIf="!isEditGuide" color="warn" (click)="newGuide()" [disabled]="formGuide.invalid">
             {{'BUTTONS.NEW_GUIDE' | translate}}
           </button>
-          <mat-progress-spinner *ngIf="isCreatingGuide" style="margin-left:1rem" color="warn" mode="indeterminate" diameter="40"></mat-progress-spinner>
           <button mat-raised-button *ngIf="isEditGuide" color="warn" (click)="updateGuide()" [disabled]="formGuide.invalid" style="margin:0.5rem">
             {{'BUTTONS.UPDATE' | translate}}
           </button>
+          <mat-progress-spinner *ngIf="isCreatingGuide" style="margin-left:1rem" color="warn" mode="indeterminate" diameter="40"></mat-progress-spinner>
           <button mat-raised-button *ngIf="isEditGuide" color="warn" (click)="cancelEdit()" style="margin:0.5rem">
             {{'BUTTONS.CANCEL' | translate}}
           </button>
@@ -273,7 +273,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" *ngIf="listGuides.data.length > 0"
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                        showFirstLastButtons
                        aria-label="Select page of periodic elements">
         </mat-paginator>

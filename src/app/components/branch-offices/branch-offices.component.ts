@@ -22,11 +22,10 @@ export class BranchOfficesComponent implements OnInit {
   cityListAddressee: any;
   isCreatingGuide: boolean;
   displayedColumns: string[];
-  @ViewChild(MatPaginator)
-  paginator: MatPaginator | undefined;
-  @ViewChild(FormGroupDirective)
-  formDirective: FormGroupDirective | undefined;
   listGuides: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
+  @ViewChild('formDirective') formDirective: FormGroupDirective | undefined;
+  @ViewChild('formDirectiveSearch') formDirectiveSearch: FormGroupDirective | undefined;
 
   constructor(private colombiaService: ColombiaService, private guidesService: GuidesService,
               private toastService: ToastrService, private translateService: TranslateService) {
@@ -234,6 +233,7 @@ export class BranchOfficesComponent implements OnInit {
   }
 
   updateGuide() {
+    this.isCreatingGuide = true;
     this.guidesService.updateGuide(this.formSearch.controls.id.value, this.getDataGuide()).subscribe((response) => {
       this.downloadFile(response);
       this.getGuides();
@@ -241,8 +241,10 @@ export class BranchOfficesComponent implements OnInit {
       this.formDirective.resetForm();
       this.formGuide.reset();
       this.isEditGuide = false;
+      this.isCreatingGuide = false;
     }, (error) => {
       this.toastService.error(this.translateService.instant('ERRORS.GUIDE_GENERATE'), this.translateService.instant('ERRORS.TITLE'));
+      this.isCreatingGuide = false;
     });
   }
 
@@ -251,6 +253,8 @@ export class BranchOfficesComponent implements OnInit {
     // @ts-ignore
     this.formDirective.resetForm();
     this.formGuide.reset();
+    // @ts-ignore
+    this.formDirectiveSearch.resetForm();
     this.formSearch.reset();
   }
 

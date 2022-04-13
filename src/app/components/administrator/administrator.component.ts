@@ -42,8 +42,8 @@ export class AdministratorComponent implements OnInit {
   listVehicles:  MatTableDataSource<any>;
   @ViewChild('paginatorUsers') paginatorUsers: MatPaginator | undefined;
   @ViewChild('paginatorVehicles') paginatorVehicles: MatPaginator | undefined;
-  @ViewChild(FormGroupDirective) formDirective: FormGroupDirective | undefined;
-  @ViewChild(FormGroupDirective) formDirectiveVehicle: FormGroupDirective | undefined;
+  @ViewChild('formDirective') formDirective: FormGroupDirective | undefined;
+  @ViewChild('formDirectiveVehicle') formDirectiveVehicle: FormGroupDirective | undefined;
 
   constructor(private toastService: ToastrService, private translateService: TranslateService,
               private routesService: RoutesService, private vehiclesService: VehiclesService) {
@@ -192,6 +192,7 @@ export class AdministratorComponent implements OnInit {
 
   uploadPolygons(list: any[]) {
     let listTemp: any[] = [];
+    this.selectedShape = [];
     list.forEach(obj => {
       let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
         return { lat: item.latitude, lng: item.longitude }
@@ -351,11 +352,11 @@ export class AdministratorComponent implements OnInit {
   updateVehicle(): void {
     const vehicle = { ...(this.formVehicles.valid && this.formVehicles.value) };
     this.vehiclesService.updateVehicle(vehicle).subscribe(response => {
-      this.formVehicles.reset();
+      this.getListVehicles();
       //@ts-ignore
       this.formDirectiveVehicle.resetForm();
+      this.formVehicles.reset();
       this.isEditVehicle = false;
-      this.getListVehicles();
       this.toastService.success(this.translateService.instant('LABELS.SUCCESS_UPDATE_VEHICLE'), this.translateService.instant('LABELS.VEHICLES_MANAGEMENT'));
     }, (error) => {
       this.toastService.error(this.translateService.instant('ERRORS.VEHICLES_CREATE'), this.translateService.instant('ERRORS.TITLE'));
@@ -382,7 +383,10 @@ export class AdministratorComponent implements OnInit {
   }
 
   findAssignedRoute(id: string): string {
+    if (this.listPolygons.length === 0) {
+      return '';
+    }
     const route = this.listPolygons.find(item => item.id === parseInt(id));
-    return route.name;
+    return route !== undefined ? route.name : '';
   }
 }
