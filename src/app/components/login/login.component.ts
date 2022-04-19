@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
         const role = roleUser.data().role;
         if (role === RoleEnum.ADMIN || role === RoleEnum.POINT) {
           sessionStorage.setItem('role', role);
-          console.log(userCredential);
           // @ts-ignore
           sessionStorage.setItem('tk', userCredential.user.accessToken);
           this.router.navigate(['home']);

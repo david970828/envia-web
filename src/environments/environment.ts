@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   apiCountry: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
-  apiGuides: 'https://envia-guide.herokuapp.com',
+  apiGuides: 'https://envia-guide.herokuapp.com/api',
   apiPolygons: 'http://localhost:8080',
   apiKeyMaps: 'AIzaSyDybihmidjkWncTMrLuqnInXXkNOiDDx14',
   apiVehicles: 'http://mcrvehiculos.us-3.evennode.com',

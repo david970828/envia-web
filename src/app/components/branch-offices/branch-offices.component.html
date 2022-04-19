@@ -241,8 +241,8 @@
         </div>
         <table mat-table [dataSource]="listGuides" matSort *ngIf="listGuides.data.length > 0">
           <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>No.</th>
-            <td mat-cell *matCellDef="let element; let i = index"> 1</td>
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let element;">{{element.id_guide}}</td>
           </ng-container>
 
           <ng-container matColumnDef="date_admission">

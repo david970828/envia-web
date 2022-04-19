@@ -99,7 +99,7 @@
               <mat-icon>add_circle</mat-icon>&nbsp;{{'LABELS.NEW_ROUTE' | translate}}
             </button>
 
-            <form novalidate [formGroup]="formPolygons" *ngIf="isCreatingPolygon">
+            <form novalidate [formGroup]="formPolygons" *ngIf="isCreatingPolygon" #formDirectivePolygons>
               <mat-icon [style.color]="formPolygons.controls.color.value">layers</mat-icon>
               <mat-form-field appearance="fill" floatLabel="always">
                 <mat-label>{{'LABELS.ROUTE_NAME' | translate}} *</mat-label>
@@ -121,9 +121,10 @@
             </form>
           </div>
 
-          <agm-map [zoom]="13" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
+          <agm-map *ngIf="!isUpdateMap" [zoom]="12" [latitude]="lat" [longitude]="lng" (mapReady)="onMapReady($event)"></agm-map>
+          <mat-progress-spinner *ngIf="isUpdateMap" style="margin:auto" color="warn" mode="indeterminate" diameter="60"></mat-progress-spinner>
 
-          <table mat-table [dataSource]="listPolygons" *ngIf="listPolygons.length > 0">
+          <table mat-table [dataSource]="listPolygons" *ngIf="listPolygons.data.length > 0">
             <ng-container matColumnDef="color">
               <th mat-header-cell *matHeaderCellDef>{{'LABELS.COLOR' | translate}}</th>
               <td mat-cell *matCellDef="let element;"><mat-icon [style.color]="element.color">layers</mat-icon></td>
@@ -149,6 +150,10 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumnsPolygons"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumnsPolygons;"></tr>
           </table>
+          <mat-paginator #paginatorPolygons [pageSizeOptions]="[5, 10, 20]"
+                         showFirstLastButtons aria-label="Select page of periodic elements"
+                         [length]="listPolygons.data.length">
+          </mat-paginator>
         </div>
       </div>
     </mat-tab>
@@ -176,7 +181,7 @@
           <mat-form-field appearance="fill">
             <mat-label>{{'LABELS.ASSIGNED_ROUTE' | translate}} * </mat-label>
             <mat-select formControlName="assignedRoute">
-              <mat-option *ngFor="let route of listPolygons" value="{{route.id}}" title="{{route.description}}">{{route.name}}</mat-option>
+              <mat-option *ngFor="let route of listPolygons.data" value="{{route.id}}" title="{{route.description}}">{{route.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 

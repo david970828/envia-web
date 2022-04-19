@@ -25,12 +25,12 @@ export class AdministratorComponent implements OnInit {
   hide: boolean;
   isEdit: boolean;
   roleList: string[];
-  listPolygons: any[];
   selectedShape: any[];
   drawingManager: any;
   selectedArea: number;
   hideConfirm: boolean;
   formUsers: FormGroup;
+  isUpdateMap: boolean;
   isEditVehicle: boolean;
   formVehicles: FormGroup;
   formPolygons: FormGroup;
@@ -39,11 +39,14 @@ export class AdministratorComponent implements OnInit {
   displayedColumnsVehicles: string[];
   displayedColumnsPolygons: string[];
   listUsers: MatTableDataSource<any>;
+  listPolygons: MatTableDataSource<any>;
   listVehicles:  MatTableDataSource<any>;
   @ViewChild('paginatorUsers') paginatorUsers: MatPaginator | undefined;
   @ViewChild('paginatorVehicles') paginatorVehicles: MatPaginator | undefined;
+  @ViewChild('paginatorPolygons') paginatorPolygons: MatPaginator | undefined;
   @ViewChild('formDirective') formDirective: FormGroupDirective | undefined;
   @ViewChild('formDirectiveVehicle') formDirectiveVehicle: FormGroupDirective | undefined;
+  @ViewChild('formDirectivePolygons') formDirectivePolygons: FormGroupDirective | undefined;
 
   constructor(private toastService: ToastrService, private translateService: TranslateService,
               private routesService: RoutesService, private vehiclesService: VehiclesService) {
@@ -77,13 +80,14 @@ export class AdministratorComponent implements OnInit {
     this.hide = true;
     this.isEdit = false;
     this.selectedArea = 0;
-    this.listPolygons = [];
     this.hideConfirm = true;
+    this.isUpdateMap = false;
     this.selectedShape = [];
     this.isEditVehicle = false;
     this.isCreatingPolygon = false;
     this.roleList = Object.values(RoleEnum);
     this.listUsers = new MatTableDataSource<any>();
+    this.listPolygons = new MatTableDataSource<any>();
     this.listVehicles = new MatTableDataSource<any>();
     this.displayedColumns = ['id', 'user', 'role', 'actions'];
     this.displayedColumnsPolygons = ['color', 'name', 'description', 'actions'];
@@ -107,6 +111,7 @@ export class AdministratorComponent implements OnInit {
 
   onMapReady(map: any) {
     this.map = map;
+    debugger;
     this.listRoutes();
   }
 
@@ -220,10 +225,14 @@ export class AdministratorComponent implements OnInit {
       listTemp.push({...obj, color: polygon.color});
       this.selectedShape.push(polygon);
     });
-    this.listPolygons = listTemp;
+    this.listPolygons = new MatTableDataSource(listTemp);
+    //@ts-ignore
+    this.listPolygons.paginator = this.paginatorPolygons;
+    this.isUpdateMap = false;
   }
 
   savePolygon() {
+    this.isUpdateMap = true;
     let polygon = {
       name: this.formPolygons.controls.name.value,
       description: this.formPolygons.controls.description.value,
@@ -233,7 +242,7 @@ export class AdministratorComponent implements OnInit {
     };
 
     this.routesService.createRoute(polygon).subscribe(() => {
-      this.listPolygons = [];
+      this.listPolygons.data = [];
       this.selectedShape = [];
       this.listRoutes();
       this.isCreatingPolygon = false;
@@ -244,6 +253,7 @@ export class AdministratorComponent implements OnInit {
   }
 
   deletePolygon(id: number) {
+    this.isUpdateMap = true;
     this.routesService.deleteRoute(id).subscribe(() => {
       if (this.selectedShape.length > 0) {
         this.selectedShape.map(item => {
@@ -304,7 +314,7 @@ export class AdministratorComponent implements OnInit {
     docs.forEach(doc => {
       users.push(doc.data());
     });
-    this.listUsers =  new MatTableDataSource(users);
+    this.listUsers = new MatTableDataSource(users);
     //@ts-ignore
     this.listUsers.paginator = this.paginatorUsers;
   }
@@ -383,10 +393,10 @@ export class AdministratorComponent implements OnInit {
   }
 
   findAssignedRoute(id: string): string {
-    if (this.listPolygons.length === 0) {
+    if (this.listPolygons.data.length === 0) {
       return '';
     }
-    const route = this.listPolygons.find(item => item.id === parseInt(id));
+    const route = this.listPolygons.data.find(item => item.id === parseInt(id));
     return route !== undefined ? route.name : '';
   }
 }
