@@ -11,6 +11,7 @@
     "POINT": "Point of attention",
     "OPERATOR": "Operator",
     "DELIVERY": "Delivery",
+    "VEHICLES": "Vehicles",
     "USERS_MANAGEMENT": "User Management",
     "ROUTES_MANAGEMENT": "Routes Management",
     "GUIDES_MANAGEMENT": "Guide Management",

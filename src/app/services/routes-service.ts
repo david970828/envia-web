@@ -9,14 +9,14 @@ export class RoutesService {
   constructor(private http: HttpClient) { }
 
   listRoutes(): Observable<any> {
-    return this.http.get(`${environment.apiPolygons}/api/polygon`).pipe((response: any) => response);
+    return this.http.get(`${environment.apiPolygons}/polygon`).pipe((response: any) => response);
   }
 
   createRoute(route: any): Observable<any> {
-    return this.http.post(`${environment.apiPolygons}/api/polygon`, route).pipe((response: any) => response);
+    return this.http.post(`${environment.apiPolygons}/polygon`, route).pipe((response: any) => response);
   }
 
   deleteRoute(id: number): Observable<any> {
-    return this.http.delete(`${environment.apiPolygons}/api/polygon/${id}`).pipe((response: any) => response);
+    return this.http.delete(`${environment.apiPolygons}/polygon/${id}`).pipe((response: any) => response);
   }
 }

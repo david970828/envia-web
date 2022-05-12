@@ -111,7 +111,6 @@ export class AdministratorComponent implements OnInit {
 
   onMapReady(map: any) {
     this.map = map;
-    debugger;
     this.listRoutes();
   }
 

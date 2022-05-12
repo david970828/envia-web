@@ -2,9 +2,9 @@ export const environment = {
   production: true,
   apiCountry: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
   apiGuides: 'http://api404.eastus.cloudapp.azure.com:8000/api',
-  apiPolygons: 'http://localhost:8080',
+  apiPolygons: 'http://api404.eastus.cloudapp.azure.com:8000/api',
+  apiVehicles: 'http://api404.eastus.cloudapp.azure.com:8000/api',
   apiKeyMaps: 'AIzaSyDybihmidjkWncTMrLuqnInXXkNOiDDx14',
-  apiVehicles: 'http://mcrvehiculos.us-3.evennode.com',
   firebaseConfig: {
     apiKey: "AIzaSyCM1Hi8zbT5UeO60u0TfE0fkDMZmtQxNYY",
     authDomain: "envia-9b0b8.firebaseapp.com",
