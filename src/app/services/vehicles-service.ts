@@ -17,6 +17,6 @@ export class VehiclesService {
   }
 
   updateVehicle(vehicle: any): Observable<any> {
-    return this.http.patch(`${environment.apiVehicles}/vehicles/SetVehicleRoute`, vehicle).pipe((response: any) => response);
+    return this.http.put(`${environment.apiVehicles}/vehicles/SetVehicleRoute`, vehicle).pipe((response: any) => response);
   }
 }

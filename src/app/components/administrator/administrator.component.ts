@@ -198,8 +198,8 @@ export class AdministratorComponent implements OnInit {
     let listTemp: any[] = [];
     this.selectedShape = [];
     list.forEach(obj => {
-      let positions = obj.positions.map((item: { latitude: any; longitude: any; }) => {
-        return { lat: item.latitude, lng: item.longitude }
+      let positions = obj.Positions.map((item: { Latitude: any; Longitude: any; }) => {
+        return { lat: item.Latitude, lng: item.Longitude }
       });
 
       const fill_color = this.rgbColor();
@@ -210,14 +210,14 @@ export class AdministratorComponent implements OnInit {
         fillColor: fill_color,
         strokeWeight: 3,
         id: obj.id,
-        positions: obj.positions,
+        positions: obj.Positions,
         color: fill_color
       });
 
       let map = this.map;
       let popup = new google.maps.InfoWindow();
       polygon.addListener('click', function(e: any) {
-        popup.setContent('Ruta: ' + obj.name);
+        popup.setContent('Ruta: ' + obj.Name);
         popup.setPosition(e.latLng);
         popup.open(map);
       });
@@ -395,7 +395,7 @@ export class AdministratorComponent implements OnInit {
     if (this.listPolygons.data.length === 0) {
       return '';
     }
-    const route = this.listPolygons.data.find(item => item.id === parseInt(id));
-    return route !== undefined ? route.name : '';
+    const route = this.listPolygons.data.find(item => item.Id === parseInt(id));
+    return route !== undefined ? route.Name : '';
   }
 }
