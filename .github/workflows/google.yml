@@ -15,7 +15,7 @@ name: Build and Deploy to GKE
 on:
   push:
     branches:
-      - develop
+      - master
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -30,7 +30,7 @@ jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
-    environment: develop
+    environment: master
 
     permissions:
       contents: 'read'
