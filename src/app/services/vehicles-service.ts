@@ -9,14 +9,14 @@ export class VehiclesService {
   constructor(private http: HttpClient) { }
 
   listVehicles(): Observable<any> {
-    return this.http.get(`${environment.apiVehicles}/vehicles`).pipe((response: any) => response);
+    return this.http.get(`${environment.apiServices}/vehicles`).pipe((response: any) => response);
   }
 
   createVehicle(vehicle: any): Observable<any> {
-    return this.http.post(`${environment.apiVehicles}/vehicles`, vehicle).pipe((response: any) => response);
+    return this.http.post(`${environment.apiServices}/vehicles`, vehicle).pipe((response: any) => response);
   }
 
   updateVehicle(vehicle: any): Observable<any> {
-    return this.http.put(`${environment.apiVehicles}/vehicles/SetVehicleRoute`, vehicle).pipe((response: any) => response);
+    return this.http.put(`${environment.apiServices}/vehicles/SetVehicleRoute`, vehicle).pipe((response: any) => response);
   }
 }

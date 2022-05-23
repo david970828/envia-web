@@ -9,23 +9,23 @@ export class GuidesService {
   constructor(private http: HttpClient) { }
 
   createGuide(data: any): Observable<any> {
-    return this.http.post(`${environment.apiGuides}/guides/create`, { data }, { responseType:'text' }).pipe((response: any) => response);
+    return this.http.post(`${environment.apiServices}/guides/create`, { data }, { responseType:'text' }).pipe((response: any) => response);
   }
 
   listGuides(): Observable<any> {
-    return this.http.get(`${environment.apiGuides}/guides_view`).pipe((response: any) => response);
+    return this.http.get(`${environment.apiServices}/guides_view`).pipe((response: any) => response);
   }
 
   getGuide(id: string): Observable<any> {
-    return this.http.get(`${environment.apiGuides}/guides_view/${id}`).pipe((response: any) => response);
+    return this.http.get(`${environment.apiServices}/guides_view/${id}`).pipe((response: any) => response);
   }
 
   getPerson(id: string): Observable<any> {
-    return this.http.get(`${environment.apiGuides}/people/${id}`).pipe((response: any) => response);
+    return this.http.get(`${environment.apiServices}/people/${id}`).pipe((response: any) => response);
   }
 
   updateGuide(pathParam: string, data: any): Observable<any> {
-    return this.http.put(`${environment.apiGuides}/pdf-update/${pathParam}`, { data }).pipe((response: any) => response);
+    return this.http.put(`${environment.apiServices}/pdf-update/${pathParam}`, { data }).pipe((response: any) => response);
   }
 
 }
