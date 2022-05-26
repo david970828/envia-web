@@ -67,7 +67,7 @@ export class BranchOfficesComponent implements OnInit {
     this.cityListAddressee = [];
     this.isCreatingGuide = false;
     this.listGuides = new MatTableDataSource<any>();
-    this.displayedColumns = ['id', 'date_admission', 'origin_city', 'destination_city', 'content_guide', 'status'];
+    this.displayedColumns = ['id', 'date_admission', 'document_sender', 'document_addressee', 'origin_city', 'destination_city', 'content_guide', 'service_value_guide', 'status'];
   }
 
   ngOnInit(): void {
@@ -161,6 +161,11 @@ export class BranchOfficesComponent implements OnInit {
 
   getGuides() {
     this.guidesService.listGuides().subscribe(response => {
+      // @ts-ignore
+      response = response.sort((a, b) => {
+        // @ts-ignore
+        return new Date(b.date_admission) - new Date(a.date_admission);
+      });
       this.listGuides =  new MatTableDataSource(response);
       //@ts-ignore
       this.listGuides.paginator = this.paginator;
