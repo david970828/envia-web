@@ -8,6 +8,8 @@ import { RoutesService} from '../../services/routes-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { CustomValidators } from '../../utils/CustomValidators';
 import { VehiclesService } from '../../services/vehicles-service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogComponent } from '../../utils/dialog/dialog.component';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { doc, getFirestore, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
@@ -49,7 +51,8 @@ export class AdministratorComponent implements OnInit {
   @ViewChild('formDirectivePolygons') formDirectivePolygons: FormGroupDirective | undefined;
 
   constructor(private toastService: ToastrService, private translateService: TranslateService,
-              private routesService: RoutesService, private vehiclesService: VehiclesService) {
+              private routesService: RoutesService, private vehiclesService: VehiclesService,
+              private dialog: MatDialog) {
 
     this.formUsers = new FormGroup({
       user: new FormControl('', [Validators.required, Validators.email]),
@@ -252,22 +255,34 @@ export class AdministratorComponent implements OnInit {
   }
 
   deletePolygon(id: number) {
-    this.isUpdateMap = true;
-    this.routesService.deleteRoute(id).subscribe(() => {
-      if (this.selectedShape.length > 0) {
-        this.selectedShape.map(item => {
-          if (item.id === id) {
-            item.setMap(null);
-            this.selectedArea = 0;
-          }
-        });
-        this.selectedShape = this.selectedShape.filter(item => { return item.id !== id });
-        this.listRoutes();
-        this.toastService.success(this.translateService.instant('LABELS.DELETE_ROUTE'), this.translateService.instant('LABELS.ROUTES_MANAGEMENT'));
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    this.dialog.open(DialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        if (data === 'accept') {
+          this.isUpdateMap = true;
+          this.routesService.deleteRoute(id).subscribe(() => {
+            if (this.selectedShape.length > 0) {
+              this.selectedShape.map(item => {
+                if (item.id === id) {
+                  item.setMap(null);
+                  this.selectedArea = 0;
+                }
+              });
+              this.selectedShape = this.selectedShape.filter(item => { return item.id !== id });
+              this.listRoutes();
+              this.toastService.success(this.translateService.instant('LABELS.DELETE_ROUTE'), this.translateService.instant('LABELS.ROUTES_MANAGEMENT'));
+            }
+          }, (error) => {
+            this.toastService.error(this.translateService.instant('ERRORS.ROUTES_DELETE'), this.translateService.instant('ERRORS.TITLE'));
+          });
+        }
       }
-    }, (error) => {
-      this.toastService.error(this.translateService.instant('ERRORS.ROUTES_DELETE'), this.translateService.instant('ERRORS.TITLE'));
-    });
+    );
   }
 
   createUser() {
@@ -296,15 +311,6 @@ export class AdministratorComponent implements OnInit {
 
   viewError() {
     this.toastService.error(this.translateService.instant('ERRORS.USER'), this.translateService.instant('ERRORS.TITLE'));
-  }
-
-  deleteUser(user: any) {
-    deleteDoc(doc(getFirestore(), 'users', user.uid)).then(() => {
-      this.toastService.success(this.translateService.instant('LABELS.USER_DELETE'), this.translateService.instant('LABELS.USER_DELETE_TITLE'));
-      this.getListUsers();
-    }).catch(() => {
-      this.toastService.error(this.translateService.instant('ERRORS.USER_DELETE'), this.translateService.instant('ERRORS.TITLE'));
-    });
   }
 
   async getListUsers() {
@@ -397,5 +403,25 @@ export class AdministratorComponent implements OnInit {
     }
     const route = this.listPolygons.data.find(item => item.Id === parseInt(id));
     return route !== undefined ? route.Name : '';
+  }
+
+  deleteUser(user: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    this.dialog.open(DialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        if (data === 'accept')
+        deleteDoc(doc(getFirestore(), 'users', user.uid)).then(() => {
+          this.toastService.success(this.translateService.instant('LABELS.USER_DELETE'), this.translateService.instant('LABELS.USER_DELETE_TITLE'));
+          this.getListUsers();
+        }).catch(() => {
+          this.toastService.error(this.translateService.instant('ERRORS.USER_DELETE'), this.translateService.instant('ERRORS.TITLE'));
+        });
+      }
+    );
   }
 }

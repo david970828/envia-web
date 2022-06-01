@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>{{ 'LABELS.DIALOG.TITLE' | translate }}</h2>
+<mat-dialog-content>
+  {{ 'LABELS.DIALOG.CONTENT' | translate }}
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="mat-raised-button"(click)="close()">{{ 'LABELS.DIALOG.CANCEL' | translate }}</button>
+  <button class="mat-raised-button mat-warn"(click)="save()">{{ 'LABELS.DIALOG.ACCEPT' | translate }}</button>
+</mat-dialog-actions>

@@ -17,6 +17,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { GuidesService } from './services/guides-service';
 import { environment } from '../environments/environment';
 import { RoutesService } from './services/routes-service';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomValidators } from './utils/CustomValidators';
@@ -29,6 +30,7 @@ import { VehiclesService } from './services/vehicles-service';
 import { HomeComponent } from './components/home/home.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { DialogComponent } from './utils/dialog/dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { LoginComponent } from './components/login/login.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -49,6 +51,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AppComponent,
     HomeComponent,
     LoginComponent,
+    DialogComponent,
     AdministratorComponent,
     BranchOfficesComponent,
   ],
@@ -62,6 +65,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatTableModule,
     MatButtonModule,
     MatSelectModule,
+    MatDialogModule,
     MatDividerModule,
     MatStepperModule,
     HttpClientModule,

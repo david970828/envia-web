@@ -73,6 +73,12 @@
       "5": "Cancelado",
       "6": "Usuario no encontrado",
       "7": "Error de documentación"
+    },
+    "DIALOG" : {
+      "TITLE": "Confirmación de acción",
+      "CONTENT": "¿Estas seguro que deseas ejecutar esta acción?",
+      "CANCEL": "Cancelar",
+      "ACCEPT": "Aceptar"
     }
   },
   "BUTTONS": {
